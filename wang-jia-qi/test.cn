@@ -1,0 +1,12 @@
+1 2 3 4 5 6 7 8 9 10 10 sum . cr
+1000 -5 12 54 4 sum . cr
+5 Factorial .cr
+6 Factorial .cr
+7 Factorial .cr
+8 Factorial .cr
+9 Factorial .cr
+10 Factorial .cr
+10 Prime . . . . cr
+100 Prime . . . . cr
+1000 Prime . . . . cr
+10000 Prime . . . . cr

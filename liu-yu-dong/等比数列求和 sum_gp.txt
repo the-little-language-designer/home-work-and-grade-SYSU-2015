@@ -1,0 +1,46 @@
+﻿;;以n为项数,q为公比,a为首项的等比数列求和
+
+输入 a(首项)，q(公比），n(项数)，再输入sum_gp,即可求出等比数列的和
+
+define_function "sum_gp1", summation_gp1
+;;<<a,q,n -- a,q,n,q>>
+xx dup2
+xx drop
+xx end
+
+define_function "sum_gp2", summation_gp2
+;;<<a,q,n,q -- a,q,n,q-1>>
+xx literal,1
+xx subtraction
+xx end
+
+define_function "sum_gp3", summation_gp3
+;;<<a,q,n,q-1 -- q-1,a,q^n>>
+xx xxxswapx
+xx power
+xx end
+
+define_function "sum_gp4", summation_gp4
+;;<<q-1,a,q^n -- q-1,a*q^n-a>>
+xx dup2
+xx drop
+xx multiple
+xx subtraction
+xx negate
+xx end
+
+define_function "sum_gp5", summation_gp5
+;;<<q-1,a*q^n-a -- (a*q^n-a)/(q-1)>>
+xx swap
+xx division
+xx end
+
+define_function "sum_gp", summation_gp
+;;<<a,q,n -- a*(1-q^n)/(1-q)>>
+xx summation_gp1
+xx summation_gp2
+xx summation_gp3
+xx summation_gp4
+xx summation_gp5
+xx end
+

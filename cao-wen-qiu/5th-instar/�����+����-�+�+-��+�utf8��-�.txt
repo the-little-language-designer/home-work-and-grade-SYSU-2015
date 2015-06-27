@@ -1,0 +1,130 @@
+小组信息：
+曹闻秋 12335007
+吴祎祎 12335212
+李嘉慧 13336089
+
+
+说明文档：
+我们组在助教给的原代码的基础上，修改定义了4个function以及3个primitive_function,我们是在第五个instar里做出的修改，并在测试程序中运行良好。
+定义min函数,以求得最小值
+define_function "min", min
+        xx dup2
+        xx less_than? ,false?branch, 3
+        xx drop
+        xx end
+        xx swap
+        xx drop
+        xx end
+定义max函数，以求得最大值
+define_function "max", max
+        xx dup2
+        xx greater_than? ,false?branch, 3
+        xx drop
+        xx end
+        xx swap
+        xx drop
+        xx end
+
+
+定义Fibonacci_number函数与help_Fibonacci_number函数，以生成斐波那契数列
+define_function "Fibonacci_number", Fibonacci_number
+        xx zero, one
+        xx xswapxx
+        xx help_Fibonacci_number
+        xx drop
+        xx end
+define_function "help_Fibonacci_number", help_Fibonacci_number
+        xx dup, zero?, false?branch, 2
+        xx end
+        xx sub1
+        xx xxoverx
+        xx swap
+        xx taca, help_Fibonacci_number 
+
+定义square函数，求取平方值
+define_primitive_function "square", square
+    pop_argument_stack rax
+    imul rax, rax
+    push_argument_stack rax
+    next
+定义cube函数，求取三次方值
+define_primitive_function "cube", cube
+    pop_argument_stack rax
+    mov rbx, rax
+    imul rax, rax
+    imul rbx, rax
+    push_argument_stack rbx
+    next
+定义power4函数，求取四次方值
+define_primitive_function "power4", power4
+      pop_argument_stack rax
+      imul rax, rax
+      imul rax, rax
+      push_argument_stack rbx
+      next
+测试函数
+运行结果得到EXE文件
+
+
+
+
+utf8代码：
+&#x6211;&#x4EEC;&#x7EC4;&#x5728;&#x52A9;&#x6559;&#x7ED9;&#x7684;&#x539F;&#x4EE3;&#x7801;&#x7684;&#x57FA;&#x7840;&#x4E0A;&#xFF0C;&#x4FEE;&#x6539;&#x5B9A;&#x4E49;&#x4E86;4&#x4E2A;function&#x4EE5;&#x53CA;3&#x4E2A;primitive_function,&#x6211;&#x4EEC;&#x662F;&#x5728;&#x7B2C;&#x4E94;&#x4E2A;instar&#x91CC;&#x505A;&#x51FA;&#x7684;&#x4FEE;&#x6539;&#xFF0C;&#x5E76;&#x5728;&#x6D4B;&#x8BD5;&#x7A0B;&#x5E8F;&#x4E2D;&#x8FD0;&#x884C;&#x826F;&#x597D;&#x3002;
+&#x5B9A;&#x4E49;min&#x51FD;&#x6570;,&#x4EE5;&#x6C42;&#x5F97;&#x6700;&#x5C0F;&#x503C;
+define_function "min", min
+        xx dup2
+        xx less_than? ,false?branch, 3
+        xx drop
+        xx end
+        xx swap
+        xx drop
+        xx end
+&#x5B9A;&#x4E49;max&#x51FD;&#x6570;&#xFF0C;&#x4EE5;&#x6C42;&#x5F97;&#x6700;&#x5927;&#x503C;
+define_function "max", max
+        xx dup2
+        xx greater_than? ,false?branch, 3
+        xx drop
+        xx end
+        xx swap
+        xx drop
+        xx end
+
+
+&#x5B9A;&#x4E49;Fibonacci_number&#x51FD;&#x6570;&#x4E0E;help_Fibonacci_number&#x51FD;&#x6570;&#xFF0C;&#x4EE5;&#x751F;&#x6210;&#x6590;&#x6CE2;&#x90A3;&#x5951;&#x6570;&#x5217;
+define_function "Fibonacci_number", Fibonacci_number
+        xx zero, one
+        xx xswapxx
+        xx help_Fibonacci_number
+        xx drop
+        xx end
+define_function "help_Fibonacci_number", help_Fibonacci_number
+        xx dup, zero?, false?branch, 2
+        xx end
+        xx sub1
+        xx xxoverx
+        xx swap
+        xx taca, help_Fibonacci_number 
+
+&#x5B9A;&#x4E49;square&#x51FD;&#x6570;&#xFF0C;&#x6C42;&#x53D6;&#x5E73;&#x65B9;&#x503C;
+define_primitive_function "square", square
+    pop_argument_stack rax
+    imul rax, rax
+    push_argument_stack rax
+    next
+&#x5B9A;&#x4E49;cube&#x51FD;&#x6570;&#xFF0C;&#x6C42;&#x53D6;&#x4E09;&#x6B21;&#x65B9;&#x503C;
+define_primitive_function "cube", cube
+    pop_argument_stack rax
+    mov rbx, rax
+    imul rax, rax
+    imul rbx, rax
+    push_argument_stack rbx
+    next
+&#x5B9A;&#x4E49;power4&#x51FD;&#x6570;&#xFF0C;&#x6C42;&#x53D6;&#x56DB;&#x6B21;&#x65B9;&#x503C;
+define_primitive_function "power4", power4
+      pop_argument_stack rax
+      imul rax, rax
+      imul rax, rax
+      push_argument_stack rbx
+      next
+&#x6D4B;&#x8BD5;&#x51FD;&#x6570;
+&#x8FD0;&#x884C;&#x7ED3;&#x679C;&#x5F97;&#x5230;EXE&#x6587;&#x4EF6;

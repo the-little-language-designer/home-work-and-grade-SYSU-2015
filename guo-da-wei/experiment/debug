@@ -1,0 +1,6 @@
+rm cicada-nymph
+./fasm -m 100000 cicada-nymph.fasm
+
+./cicada-nymph
+
+

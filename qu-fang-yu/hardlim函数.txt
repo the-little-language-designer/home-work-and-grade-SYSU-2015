@@ -1,0 +1,5 @@
+﻿define_function "hardlim", hardlim
+	;; << a -- 1 if a > 0, 0 else
+	xx positive?
+	xx end
+（bp神经网络使用的激活函数）

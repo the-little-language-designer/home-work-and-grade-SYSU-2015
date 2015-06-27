@@ -1,0 +1,33 @@
+﻿说明文档
+马九思1233515812统计张超逸1233526912统计王政纲1233520212统计刘盈1233514612统计
+备注：exe文件因为安全问题我们将其改为.exe1后缀，运行时烦请改回.exe。
+我们根据师兄的五阶段程序，设计了本次试验。
+首先，我们定义了一个“two”的primitive_function，在栈的末尾添加2。
+define_primitive_function "two", two
+   ;; << -- 2 >>
+   xor rax, rax
+   inc rax
+   inc rax
+   push_argument_stack rax
+   next                    
+
+然后，定义一个构造连乘的数列的函数Mul_series。
+define_function "Mul_series",Mul_series
+        xx one,two
+        xx xswapxx
+        xx help_Mul_series
+        xx drop
+        xx end
+
+我们将1，2，…入栈，使用one，two函数构成数列前两项，再用x|swap|xx函数把输入的最后一个数调整到栈顶，以便进行乘法运算。
+为了避免函数过于复杂，我们还要定义一个使用递归算法的辅助函数help_Mul_series帮助实现运算。
+define_function "help_Mul_series", help_Mul_series
+        xx dup, one?, false?branch,2
+        xx end
+        xx sub1
+        xx xxoverx
+        xx multiple
+        xx swap
+        xx taca, help_Mul_series      
+       函数使用dup函数复制栈顶数值one?，false?branch,2进行判断 ，为了不改变原来的序列，使用xx|over|x函数调整数列，在让末尾两数相乘合并，再swap末尾二数，为递归做准备。直到one?, false?branch,2进行判断结束，end。返回到Mul_series函数中，此时末尾的数值是判断成功后的1，所以最后用drop把栈顶1去掉，以结束该函数运行 。
+

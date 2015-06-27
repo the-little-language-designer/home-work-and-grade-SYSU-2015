@@ -1,0 +1,22 @@
+﻿ define_function "max", max
+   xx dup2, greater_than?
+   xx one?,false?branch,3
+   xx drop,end
+   xx swap
+   xx drop
+   xx end 
+
+
+define_function "min", min
+   xx dup2, less_than?
+   xx one?,false?branch,3
+   xx drop,end
+   xx swap
+   xx drop
+   xx end
+
+
+
+说明：输入两个数  然后输入max或min，可输出较大值或较小值
+
+！！！！！添加在2223行

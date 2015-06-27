@@ -1,0 +1,27 @@
+: square
+  dup
+  mul
+  end
+; define-function
+
+: squaresum
+  dup
+  one? if
+    end
+  then
+  dup sub1 
+  swap
+  square
+  swap
+  squaresum
+  add
+  end
+; define-function
+
+
+cr
+2 square
+
+
+cr
+squaresum

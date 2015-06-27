@@ -1,0 +1,229 @@
+说明文档
+
+组员：夏润禾：13336210	宣梦凡：13336225  张蔚：13336259
+班级：13级6班
+
+
+一、实验目的：在代码5的基础上，实现更多的函数功能。
+
+
+二、实验内容：
+（1）定义square函数，实现栈顶数的平方。
+（2）定义cube三次幂函数，实现栈顶数的三次幂运算。
+（3）定义斐波那契函数，实现斐波那契数列的输出。
+（4）定义factorial阶乘函数，实现栈顶元素的阶乘运算。
+（5）定义drop5函数，弹出栈顶五个元素。
+（6）定义count函数，计算栈内的元素个数。
+（7）定义sum求和函数，对栈内所有元素进行求和运算。
+（8）定义max_number函数，比较栈顶两个元素的大小，并将大的元素输出。
+（9）定义min_number函数，比较栈顶两个元素的大小，并将小的元素输出。
+*注：所有新添函数均放在moddiv函数的定义之后。
+
+
+三、设计与编码
+
+1.所用理论知识
+
+（1）栈：栈（stack）又名堆栈，它是一种运算受限的线性表。其限制是仅允许在表的一端进行插入和删除运算。这一端被称为栈顶，相对地，把另一端称为栈底。向一个栈插入新元素又称作进栈、入栈或压栈，它是把新元素放到栈顶元素的上面，使之成为新的栈顶元素；从一个栈删除元素又称作出栈或退栈，它是把栈顶元素删除掉，使其相邻的元素成为新的栈顶元素。而汇编编译器就是利用栈的原理进行工作。
+
+（2）循环结构：
+格式：【xx （指令，）判别条件?,false?branch,执行步数】
+解释：指令即可在判别之前再执行若干指令，然后写出判别条件，若是，则继续执行；若不是，则跳到“执行步数n”，即该判别语句之后的第n步。
+举例如：xx dup, zero?, false?branch,2 
+
+（3）斐波那契数列：又称黄金分割数列，指的是这样一个数列：0、1、1、2、3、5、8、13、21、……
+		   在数学上，斐波纳契数列以如下被以递归的方法定义：F（0）=0，F（1）=1，F（n）=F(n-1)+F(n-2)（n≥2，n∈N*）
+
+
+
+2.实验代码及思路
+
+以下运行结果均基于如下的栈：
+
+* 0 *  -- --
+1 2 3 4 6 2
+
+ * 1 *  -- 1 --
+
+ * 2 *  -- 1 2 --
+
+ * 3 *  -- 1 2 3 --
+
+ * 4 *  -- 1 2 3 4 --
+
+ * 5 *  -- 1 2 3 4 6 --
+
+ * 6 *  -- 1 2 3 4 6 2 --
+
+
+（1）定义square函数，实现栈顶数的平方。
+     
+代码：define_function "square", square
+        xx dup
+        xx multiple
+        xx end
+
+思路：利用dup函数对栈顶元素进行复制并入栈，此时栈顶两个元素相等，再运用multiple函数将两个元素相乘，便得到原栈顶元素的平方结果。
+
+运行结果： 
+square
+
+ * 6 *  -- 1 2 3 4 6 4 --
+
+
+
+（2）定义cube三次幂函数，实现栈顶数的三次幂运算。
+
+代码：define_function "cube", cube
+        xx dup,dup
+        xx square
+        xx multiple
+        xx end
+
+思路：利用dup函数对栈顶元素进行二次复制并入栈，此时栈顶三个元素相等，运用上述的square函数把栈顶两个元素相乘得出平方数，然后再将此时栈顶的两个元素复制，再运用multiple函数将两个元素相乘，便得到原栈顶元素的平方结果。
+
+运行结果：
+cube
+
+ * 7 *  -- 1 2 3 4 6 4 64 --
+
+
+
+（3）定义斐波那契函数，实现斐波那契数列的输出。
+
+代码：define_function "Fibonacci_number", Fibonacci_number
+        xx zero,one
+        xx xswapxx
+        xx help_Fibonacci_number
+        xx drop
+        xx end
+
+      define_function "help_Fibonacci_number", help_Fibonacci_number
+        xx dup, zero?, false?branch,2 
+        xx end
+        xx sub1
+        xx xxoverx
+        xx addition
+        xx swap
+        xx taca, help_Fibonacci_number
+
+思路：分别定义两个函数，其中help_Fibonacci_number函数为其辅助函数，帮助实现更多功能。辅助函数的大致思路如下：复制栈顶元素，若为0，则函数执行结束；若不为零，则对栈顶元素减一，复制、第三个元素后，对两个栈顶元素相加，并交换新的两个栈顶元素，并递归调用。
+
+运行结果：
+Fibonacci_number
+
+ * 9 *  -- 1 2 3 4 6 0 1 1 2 --
+
+
+
+（4）定义factorial阶乘函数，实现栈顶元素的阶乘运算。
+
+代码：define_function "factorial",factorial
+   	xx dup,one?, false?branch,2
+   	xx end
+   	xx dup, sub1, factorial
+   	xx multiple
+   	xx end
+
+思路：主要是利用到递归函数与循环结构。利用汇编里的循环结构进行判别，若栈顶元素是1则结束；若不是1，则跳到之后的第二个执行步骤，对栈顶元素进行复制，计数项-1，再递归调用factorial函数，重复调用直到计数项为0，然后将栈顶两个元素相乘。如此循环最后得到阶乘结果。
+
+运行结果：
+factorial
+
+ * 6 *  -- 1 2 3 4 6 2 --
+
+
+
+（5）定义drop5函数，弹出栈顶五个元素。
+
+代码：define_primitive_function "drop5", drop5
+   	pop_argument_stack rax
+   	pop_argument_stack rax
+   	pop_argument_stack rax
+   	pop_argument_stack rax
+   	pop_argument_stack rax
+   	next
+
+思路：模仿drop，drop2函数的定义，调用pop将栈顶元素弹出，调用五次即将栈顶五个元素弹出。
+
+运行结果：
+drop5
+
+ * 1 *  -- 1 --
+
+
+
+（6）定义count函数，计算栈内的元素个数。
+
+代码：define_primitive_function "count", count
+        mov eax, [pointer$argument_stack]
+        mov ebx, address$argument_stack    
+        sub eax, ebx
+        xor edx, edx
+        mov ebx, jo_size
+        idiv ebx
+        push_argument_stack eax 
+        next 
+
+思路：先用pointer$argument_stack得到栈顶元素的当前位置，再用address$argument_stack得到栈的开始位置，通过两者的差值可得栈的大小。同时利用jo_size得到栈内每一元素的大小，除栈大小即可得栈内元素个数。最后将计算而得的元素个数入栈，以便之后使用。
+
+运行结果：
+count
+
+ * 7 *  -- 1 2 3 4 6 2 6 --
+
+
+
+（7）定义sum求和函数，对栈内所有元素进行求和运算。
+
+代码：define_function "sum", sum
+       xx count
+       xx one?, false?branch,2
+       xx end
+       pop_argument_stack rbx
+       pop_argument_stack rax
+       add rax,rbx
+       push_argument_stack rax
+       xx sum    
+    
+思路：调用count函数，栈顶元素为栈内元素个数。判断是否为1，若为1，即栈内只有唯一的元素，故该数即为和数；若不为1，则将栈顶的两个元素相加后入栈，递归后可得最后结果。（该函数可通过编译，但在调用时似乎出现问题）
+
+
+
+（8）定义max_number函数，比较栈顶两个元素的大小，并将大的元素输出。
+
+代码：define_function "max_number",max_number
+    	xx dup2
+    	xx less_or_equal?,false?branch,3
+    	xx pretty_write_integer
+    	xx end
+    	xx swap
+    	xx pretty_write_integer
+
+思路：less_or_equal函数会将栈顶两个元素弹出，执行之后只返回1或0作为结果入栈，所以要比较栈顶两个元素的大小并输出较大元素，要先将栈顶两个元素复制，即调用dup2函数。然后进行less_orequal函数，若成功则直接将栈顶元素输出，此时输出的这个栈顶元素就是较大的数；若失败，则跳到第三步，将栈顶两个元素运用swap函数进行交换，再将栈顶元素输出，此时输出的这个交换过后的栈顶元素就是较大的数。
+
+运行结果：
+max_number
+6 
+ * 5 *  -- 1 2 3 4 2 --
+
+
+
+（9）定义min_number函数，比较栈顶两个元素的大小，并将小的元素输出。
+
+代码：define_function "min_number",min_number
+    	xx dup2
+    	xx less_or_equal?,false?branch,4
+    	xx swap
+    	xx pretty_write_integer
+    	xx end
+    	xx pretty_write_integer
+    	xx end
+
+思路：less_or_equal函数会将栈顶两个元素弹出，执行之后只返回1或0作为结果入栈，所以要比较栈顶两个元素的大小并输出较大元素，要先将栈顶两个元素复制，即调用dup2函数。然后进行less_orequal函数，若成功将栈顶两个元素运用swap函数进行交换，再将栈顶元素输出，此时输出的这个交换过后的栈顶元素就是较大的数；若失败，则跳到第4步，直接将栈顶元素输出，此时输出的这个栈顶元素就是较大的数。
+
+运行结果：
+min_number
+2 
+ * 5 *  -- 1 2 3 4 6 --
+

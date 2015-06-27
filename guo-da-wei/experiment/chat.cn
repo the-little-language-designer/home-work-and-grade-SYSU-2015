@@ -1,0 +1,32 @@
+: *chat,random-base*
+; define-variable
+
+: chat,random
+  *chat,random-base*
+  *chat,random-base* add1 10 mod
+  address *chat,random-base* save
+  end
+; define-function
+
+: chat,with,me
+  dup 0 equal? if drop " I'm a chat reboot ! " .s end then
+  dup 1 equal? if drop " I love you ! " .s end then
+  dup 2 equal? if drop " What's you name? " .s end then
+  dup 3 equal? if drop " I come from Computer. " .s end then
+  dup 4 equal? if drop " How are you ? " .s end then
+  dup 5 equal? if drop " It's so intersting !! " .s end then
+  dup 6 equal? if drop " Nice to meet you !! " .s end then 
+  dup 7 equal? if drop " Bye !!! " .s end then
+  drop  " love love love " .s end 
+; define-function
+
+: chat 
+  chat,random
+  chat,with,me
+  end
+; define-function
+
+chat
+chat
+chat
+chat

@@ -1,0 +1,128 @@
+
+
+
+* to explain the title
+
+  * the little cicada-nymph is for teaching purpose at first
+
+  * it reuses the code and idea
+    of the early version of cicada-language
+    to teach my friends
+    how to implement a interpreter
+    of a simple programming language
+
+  * I use assembly language (FASM for x86)
+    to implement the interpreter
+
+  * the programming language to be implemented
+    is a threaded-code based (Forth-like) language
+
+  * four versions of the interpreter are implemented
+    |---------+-------|
+    | linux   | 64bit |
+    | windows | 64bit |
+    | linux   | 32bit |
+    | windows | 32bit |
+    |---------+-------|
+
+
+
+* to compile it
+
+  1. download fasm (the flat assembler)
+     from : http://flatassembler.net/
+     or : https://github.com/the-little-language-designer/fasm
+
+  2. choose your platform
+     by editing "platform-configuration.inc"
+     |-------------------------|
+     | configuration	       |
+     |-------------------------|
+     | define platform linux   |
+     | define machine  64bit   |
+     |-------------------------|
+     | define platform windows |
+     | define machine  64bit   |
+     |-------------------------|
+     | define platform linux   |
+     | define machine  32bit   |
+     |-------------------------|
+     | define platform windows |
+     | define machine  32bit   |
+     |-------------------------|
+
+  3. the command used to compile the source file
+     
+     fasm -m 100000 cicada-nymph.fasm
+     
+     1) "fasm -m 100000" means that
+	fasm will use 100000 Kb of memory
+	when compiling the source code
+
+     2) you can also use the IDE of fasm (windows only)
+	to compile the source file
+	* for example
+	  File -> Open -> (choose the file)
+	  Options -> Compiler setup -> (set Memory to : 131072)
+	  Run -> Compile
+	  (output file will be saved in where the source file is)
+
+
+
+* to play with it
+
+  * just open it ^-^
+    the interpreter will show you a welcome message
+
+  * note that
+    the "core.cn" must be in the same directory as the interpreter
+
+  * when you are running the interpreter
+    you can call a function by typing its name
+    for example
+    |-----------------+----------------------------------|
+    | function name   | usage				 |
+    |-----------------+----------------------------------|
+    | test	      | to do a little test		 |
+    | report-memory   | to get a report of memory usage  |
+    | show-dictionary | to get a report of defined words |
+    |-----------------+----------------------------------|
+
+
+
+* to learn more
+
+  * you can find documentations here
+    http://the-little-language-designer.github.io/cicada-nymph/intro/contents.html
+
+
+
+* to get the newest version of the program
+
+  * the source code of this program can be downloaded from
+    https://github.com/the-little-language-designer/cicada-nymph
+
+
+
+* to contribute
+
+  * to chat
+    we use IRC
+    we have #cicada-language channel on irc.freenode.net
+
+  * mailing list
+    we use google group
+    you can find cicada-language forum here
+    https://groups.google.com/forum/#!forum/cicada-language
+
+  * to share your ideas and experiences
+    you can edit the wiki page here
+    https://github.com/the-little-language-designer/cicada-nymph/wiki
+
+  * to track todos, bugs, feature requests, and more
+    you can create an issue here
+    https://github.com/the-little-language-designer/cicada-nymph/issues
+
+  * to send patch and fix bug
+    you can do pull request here
+    https://github.com/the-little-language-designer/cicada-nymph/pulls

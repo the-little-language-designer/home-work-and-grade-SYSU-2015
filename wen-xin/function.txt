@@ -1,0 +1,39 @@
+﻿define_function "gcd", gcd
+   xx dup, zero?, false?branch, 3
+   xx	drop
+   xx	end
+   xx	swap, over, moddiv, drop
+   xx taca, gcd
+   xx end
+
+cr
+1 2 gcd .
+4 8 gcd .
+7 50 gcd .
+cr
+
+: execute_fib
+  dup one? if
+    drop drop end
+  then
+  sub1 xx|swap|x swap over add x|swap|xx
+  execute_fib
+  end
+; define-function
+
+: fib
+  1 1 x|swap|xx
+  execute_fib
+  end
+; define-function
+
+cr
+1 fib .
+2 fib .
+3 fib .
+4 fib .
+5 fib .
+6 fib .
+7 fib .
+cr
+cr

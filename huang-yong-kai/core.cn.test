@@ -1,0 +1,45 @@
+: cubes
+   << number -- number >>
+   dup
+   add1
+   mul
+   2 div
+   dup mul
+   end
+; define-function
+
+cr
+1 cubes . cr
+2 cubes . cr
+3 cubes . cr
+4 cubes . cr
+
+: fibonacci
+  << number -- number >>
+  dup zero? if
+    end
+  then
+  dup one? if
+    end
+  then
+  dup sub1 fibonacci
+  swap sub1 sub1 fibonacci
+  add
+  end
+; define-function
+
+cr
+1 fibonacci . cr
+2 fibonacci . cr
+3 fibonacci . cr
+4 fibonacci . cr
+5 fibonacci . cr
+
+
+
+: hehe
+  "you are so gorgeous!" write-string
+  end
+; define-function
+
+hehe

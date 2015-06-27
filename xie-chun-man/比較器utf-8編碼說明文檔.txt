@@ -1,0 +1,90 @@
+﻿比較器說明文檔
+一、實現功能
+
+這個彙編代碼實現的是比較功能，代碼中ax和cx分別存放兩個將要比較的數，程序比較ax和cx中數的大小，然後將比較的數的寄存器號輸出到信息窗口。
+
+二、環境要求
+
+这个汇编代码需要在64位的机器上运行，运行软件为fasm
+
+三、運行效果
+當ax大於或者等於cx時
+運行結果如下：ax
+
+當ax小於cx時
+運行結果如下：cx
+
+若想比較其他數值，則只要相應修改ax和cx的值即可
+即修改代碼中這兩條語句：
+mov      ax,1
+mov      cx,2
+
+四、核心代碼說明
+
+在初始化相關變量之後，對ax和cx附上要比較的值（mov  ax,1     mov  cx,1）
+然後對ax和cx中的值進行比較（ cmp   ax,cx）
+如果ax大於或者等於cx，則跳轉到1執行1之後的語句（ jae     l）
+否則執行下一條指令，在_message中寫入cx（mov [_message],'cx'）
+然後輸出。
+結束程序
+L之後的指令也類似，只是在_message寫入ax而不是（mov  [_message],'ax'）
+
+
+五、代碼
+
+  ; Example of 64-bit PE program
+
+format PE64 GUI
+entry start
+
+section '.text' code readable executable
+
+  start:
+        sub     rsp,8*5         ; reserve stack for API use and make stack dqword aligned
+        mov     r9d,0
+        mov     ax,1
+        mov     cx,1
+        cmp     ax,cx
+        jae     l
+        mov     [_message],'cx'
+        lea     r8,[_caption]
+        lea     rdx,[_message]
+        mov     rcx,0
+        call    [MessageBoxA]
+        mov     ecx,eax
+        call    [ExitProcess]
+
+        l:
+        mov     [_message],'ax'
+        lea     r8,[_caption]
+        lea     rdx,[_message]
+        mov     rcx,0
+        call    [MessageBoxA]
+        mov     ecx,eax
+        call    [ExitProcess]
+
+section '.data' data readable writeable
+
+  _caption db 'Win64 assembly program',0
+  _message dd ?,0
+
+section '.idata' import data readable writeable
+
+  dd 0,0,0,RVA kernel_name,RVA kernel_table
+  dd 0,0,0,RVA user_name,RVA user_table
+  dd 0,0,0,0,0
+
+  kernel_table:
+    ExitProcess dq RVA _ExitProcess
+    dq 0
+  user_table:
+    MessageBoxA dq RVA _MessageBoxA
+    dq 0
+
+  kernel_name db 'KERNEL32.DLL',0
+  user_name db 'USER32.DLL',0
+
+  _ExitProcess dw 0
+    db 'ExitProcess',0
+  _MessageBoxA dw 0
+    db 'MessageBoxA',0

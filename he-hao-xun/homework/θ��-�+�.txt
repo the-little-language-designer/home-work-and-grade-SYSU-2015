@@ -1,0 +1,84 @@
+本作业由2人合作完成
+何浩勋 12335057 2012级3班 大三 hehx6@mail2.sysu.edu.cn / hhxchris@gmail.com
+宫玉清 12335047 2012级3班 大三
+
+成果:写了两个类似的function
+
+函数:          求和
+目标:          从栈顶往下求N个jojo的和
+解释器中形式为: N sum (N is an integer)
+
+代码已经并入cicada-nymph.fasm当中并编译
+代码在cicada-nymph.fasm的第2163~2172行
+为了方便您检查,代码在此附上
+代码风格模仿您原来的函数"help,power"函数
+
+define_function "sum", sumup
+   ;; << integers -- integer >>
+   xx dup, one?, false?branch, 3
+   xx   drop
+   xx   end
+   
+   xx sub1
+   xx   xxswapx, addition
+   xx swap
+   xx taca, sumup
+
+函数:          连乘
+目标:          从栈顶往下求N个jojo的积
+解释器中形式为: N mmul (N is an integer)
+
+define_function "mmul", multimultiple
+   ;; << integers -- integer >>
+   xx dup, one?, false?branch, 3
+   xx   drop
+   xx   end
+   
+   xx sub1
+   xx   xxswapx, multiple
+   xx swap
+   xx taca, multimultiple
+
+PS:
+此前一直使用高级语言编程,这是第一次接触汇编
+也是在你的课上第一次听说到尾递归优化这种技术
+特意选择了这个要用到taca的function来做作业
+不过我们做得比较简陋就是了
+
+可惜这个学期的数学专业课比较紧张
+没花太多时间学这个线串码解释器的工作原理
+其实我对这个还是比较感兴趣,
+过了本学期的考试后,计划空出时间再学学
+
+在解释器中运行的例子:
+example1
+234 345 456 567 678  5 sum
+
+ * 1 *  -- 234 --
+
+ * 2 *  -- 234 345 --
+
+ * 3 *  -- 234 345 456 --
+
+ * 4 *  -- 234 345 456 567 --
+
+ * 5 *  -- 234 345 456 567 678 --
+
+ * 1 *  -- 2280 --
+
+example1
+1 2 3 4 5   5 mmul
+
+ * 1 *  -- 1 --
+
+ * 2 *  -- 1 2 --
+
+ * 3 *  -- 1 2 3 --
+
+ * 4 *  -- 1 2 3 4 --
+
+ * 5 *  -- 1 2 3 4 5 --
+
+ * 6 *  -- 1 2 3 4 5 5 --
+
+ * 1 *  -- 120 --

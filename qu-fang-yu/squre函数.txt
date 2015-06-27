@@ -1,0 +1,6 @@
+﻿define_function "square", square
+	;; << a -- a^2 >>
+	xx dup
+	xx multiple
+	xx end
+（平方函数）

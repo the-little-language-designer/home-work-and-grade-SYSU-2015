@@ -1,0 +1,49 @@
+本作业由2人合作完成
+黄璐 
+周翔
+
+目的:在cicada中实现绝对值函数和符号函数
+
+已经将下列代码嵌入到cicada.fasm并编译
+源代码和可执行文件都在本文件夹内
+以下是增加的代码
+
+代码:
+绝对值函数
+define_function "abs", abs
+    ;; << number -- number >>
+    xx dup
+    xx negative?, false?branch, 4
+    xx zero, swap, subtraction
+    xx end
+
+
+符号函数
+define_function "sig", sig
+    ;; << number -- number >>
+    xx negative?, false?branch, 4
+    xx zero, sub1
+    xx end
+    xx one
+    xx end
+
+例子
+
+输入
+-100 abs .
+
+输出
+ * 1 *  -- -100 --
+
+ * 1 *  -- 100 --
+
+
+输入
+-100 sig .
+
+输出
+ * 1 *  -- -100 -
+
+ * 1 *  -- -1 --
+
+

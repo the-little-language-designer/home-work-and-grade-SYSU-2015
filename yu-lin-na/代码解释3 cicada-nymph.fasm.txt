@@ -1,0 +1,46 @@
+
+
+实验人：余琳娜（13336245）叶钿（13336239）王笑颖（13336188）
+
+
+
+实验过程：
+
+我们组在小蝉语言第五阶段中增加的两个代码：
+
+第一 计算平方
+
+define_function "square", square
+        xx dup
+        xx multiple
+        xx end   
+
+将栈顶的数据取出，自己与自己进行乘法运算，得出结果，入栈。
+
+第二 输出斐波那契数列
+
+
+define_function "Fibonacci_number", Fibonacci_number
+        xx zero,one
+        xx xswapxx
+        xx help_Fibonacci_number
+        xx drop
+        xx end
+
+
+define_function "help_Fibonacci_number", help_Fibonacci_number
+        xx dup, zero?, false?branch,2 
+        xx      end
+        xx sub1
+        xx xxoverx
+        xx addition
+        xx swap
+        xx taca, help_Fibonacci_number   
+
+define_function "perimeter", perimeter
+        xx dup
+        xx square
+        xx addition
+        xx end            
+
+

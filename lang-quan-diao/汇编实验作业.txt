@@ -1,0 +1,92 @@
+﻿数计院
+13336080 郎泉钧
+13336004 鲍璇
+13336075 柯友华
+12335107 李滋源
+
+
+代码说明：
+1、
+计算前n个数的平方和 ，利用前n项平方和的公式：(n*(n+1)*(2n+1))/6
+
+
+下面是代码
+
+
+define_function "square", square
+   xx dup
+   xx literal, 2
+   xx multiple
+   xx literal, 1
+   xx addition
+   xx swap
+   xx dup
+   xx literal, 1
+   xx addition
+   xx multiple
+   xx multiple
+   xx literal, 6
+   xx division
+   xx end     
+
+2、 
+判断一个数是否为梅森素数
+梅森数是指形如“2^n-1”的数。我想判断一下这个数是否为素数
+
+我的代码分为5个主要部分
+
+1)首先是定义makemason，是为了生成n对应的梅森数
+2)其次是定义divable？是为了判断b是否能整除a。这里用到了mod函数。若余数是0，说明整除，若不是，则反之
+3)然后是判断这个数是否是素数。这一部分需要用到循环。首先判断a-1是否能整除a。若能，则结束，若不能，则判断a-2是否整除a。以此类推，直到a-i等于1
+4)最后判断跳出循环时a-i的值。若此时a-i是1，则说明a不能被除1以外的数整除，也就是说，是一个素数。若a-i不是1，则说明a是合数。
+5)主程序mason，将以上步骤穿起来，即可判断“2^n-1”是否是梅森素数
+
+  下面是代码
+define_function "mason", mason
+   ;; << n -- n, 2^n-1, is or not a mason prime number? >>
+   xx dup
+   xx makemason
+   xx aaaprime?
+   xx end
+
+define_function "makemason",makemason
+   ;;<< n -- 2^n-1>> make a mason number
+   xx literal, 2
+   xx swap
+   xx power
+   xx literal, 1
+   xx subtraction
+   xx end
+
+define_function "divable?", divable?
+   ;; << a b -- can b divid a?>>
+   xx dup2
+   xx modulo
+   xx zero?
+   xx swap
+   xx drop
+   xx swap
+   xx drop
+   xx end
+
+
+
+define_function "aaaprime?", aaaprime?
+   ;; << a , is 'a' prime?>>
+   xx dup
+   xx literal, 1
+   xx subtraction
+   xx prime?
+   xx literal, 2
+   xx less_than?
+   xx end
+
+
+define_function "prime?", prime?
+   ;;<<the main loop part>>
+   xx dup2
+   xx divable?, false?branch, 2
+   xx end
+   xx literal, 1
+   xx subtraction
+   xx taca, prime?                        

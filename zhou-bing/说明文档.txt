@@ -1,0 +1,42 @@
+﻿小组成员：周冰13336281 数计院
+                         钟宛玲13336276数计院
+                         刘英俊10321422双学位
+
+我们小组通过研究老师的代码，对汇编语言有了初步的了解。我们利用自己掌握的汇编相关知识，对老师的代码进行了部分修改添加。
+下面是详细说明：
+
+
+
+我们在函数“mod”和“equal?”之间添加了函数“fact”和“perm”。代码如下：
+
+define_function "fact", factorial
+
+xx dup, one?, false?branch, 2
+  
+xx end
+   xx dup , sub1, factorial
+   
+xx multiple
+   
+xx end
+
+
+  
+
+ ;; perm is permutation ::x of b
+
+define_function "perm",permutation
+
+ ;; <<  x,y -- x PERMUTATION y, x>y >>
+   
+xx swap
+   
+xx factorial,swap,factorial
+   
+xx division
+   
+xx end          
+
+
+其中fact函数用于计算阶乘。如：要求6的阶乘，只要输入6 fact即可；
+perm函数指permutation，用于输出排列。如：输入6 3 perm,即可求出6的3排列。

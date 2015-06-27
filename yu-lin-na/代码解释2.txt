@@ -1,0 +1,54 @@
+实验人：余琳娜（13336245）叶钿（13336239）王笑颖（13336188）
+
+实验目的：   在消息框上显示当前时间（年月日，星期）
+
+实验代码：
+
+
+format PE GUI 4.0 
+  include 'win32ax.inc'
+;**********************数据***************************** 
+  systime SYSTEMTIME 
+  szBuffer db 30 dup ?
+entry $ 
+    invoke GetLocalTime, systime 
+    mov ebx, systime 
+    movzx eax, word [ebx];年 
+    movzx esi, word [ebx+2];月 
+    movzx edx, word [ebx+4];星期 
+    movzx edi, word [ebx+6];日 
+    invoke wsprintf,szBuffer, '%d年%d月%d日 星期%d ', eax, esi, edi,edx 
+    invoke MessageBox,NULL, szBuffer, '提示', MB_OK 
+    invoke ExitProcess,NULL
+section '.import' data import readable 
+    library kernel32, 'kernel32.dll',\ 
+        user32, 'user32.dll' 
+    include 'api\kernel32.inc' 
+    include 'api\user32.inc'
+
+
+实验过程：
+
+（1）调用GetLocalTime函数。
+（2）然后将systime这个结构的变量的地址传送给ebx寄存器。
+（3）调用wsprintf函数来格式化，
+int wsprintf(
+LPTSTR lpOut,   // pointer to buffer fo 
+LPCTSTR lpFmt,   // pointer to format-control string 
+...   // optional arguments 
+);
+首先第一个参数是指定我们输出的缓冲区的地址 。
+第二个参数是指定输出的格式，第二个参数是指向输出格式字符串的地址。
+第三个参数则指定需输出的参数(也就是要格式化的参数)。
+　
+（4）接下来用mozx指令，将源操作数扩展成4阁字节并存放到目的操作数种，其余扩展的数值位用0填充，利用movzx将SYSTEMTIME结构的成员一部分扩展到相应的寄存器中，然后后面用寄存器来进行格式化字符串。
+    movzx eax, word [ebx];年 
+    movzx esi, word [ebx+2];月 
+    movzx edx, word [ebx+4];星期 
+    movzx edi, word [ebx+6];日
+　
+（5）取得systime结构变量的缓冲区地址，然后将这个地址赋值给我们的ebx寄存器，然后后面我们利用[ebx+常数]来进行变址寻址。
+（6）将格式化的后的字符串保存到之前我们声明的缓冲区中，也就是szBuffer里。　
+（7）最后通过调用MessageBox函数将其显示出来。
+     invoke MessageBox,NULL, szBuffer, '提示', MB_OK
+　

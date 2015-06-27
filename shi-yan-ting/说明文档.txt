@@ -1,0 +1,94 @@
+﻿汇编说明文档
+
+完成作业的小组成员：
+石彦婷 13336161
+王莹   13336189
+刘梓轩 13336132
+孙于婷 13336171
+
+一、任务选择  
+  我们小组选择的结课任务是通过更改第四阶段编码，实现阶乘的函数运算，并且进行了输入输出的测试。
+二、 更改位置
+  1.我们对第四阶段编码的第1059行进行了修改，插入了我们所写的”!”函数，实现的计算阶乘的目的：
+define_primitive_function "!", !      ;;factorial
+   ;; << n -- n! >>
+   pop_argument_stack rax
+   mov rbx,rax
+   sub rbx, 1
+   mov cx, 10  ;;32bit表示的最大正数为2^31<13!,所以最大只能计算12!,循环10次结束
+.loop:
+    imul rax, rbx
+    sub rbx, 1
+    loopnz .loop
+   push_argument_stack rax
+   next                                                                                                                                                                
+   这一部分的插入利用loop循环实现了”!”(阶乘)函数
+
+2. 我们对第四阶段编码的第488—621行之间的内容,即little_test函数进行了修改，使其可以完成对阶乘函数的测试及输入输出功能。修改如下：
+first_jojo:
+   xx instruction  ;;对输入测试函数的要求
+   xx little_test
+
+define_function "instruction", instruction
+   ;; << -- >>
+   xx literal, string$the_requirement_of_the_input
+   xx literal, length$the_requirement_of_the_input
+   xx write_string
+   xx end
+
+string$the_requirement_of_the_input:
+   db 10
+   db "Please enter a integer greater than 1 and less than 13 *^_^*"  ;;卖个萌
+   db 10
+   db 10
+.end:
+length$the_requirement_of_the_input = (.end - string$the_requirement_of_the_input)
+
+define_primitive_function "bye", exit_with_TOS
+   call __exit_with_TOS
+
+define_variable "", V__little_test_number
+   xx 5  ;;定义测试变量为5
+
+define_function "little_test", little_test
+
+   ;;;; variable
+    xx V__little_test_number
+    xx write_integer
+    xx literal, 33, write_byte
+    xx literal, 61, write_byte
+   ;; xx exit_with_TOS
+   ;;;; exit ocde : 5!=
+
+   ;;;; address
+    xx address, V__little_test_number, fetch, !  ;;计算5!
+    xx address, V__little_test_number, save
+    xx V__little_test_number, write_integer
+    xx literal, 10, write_byte
+   ;; xx exit_with_TOS
+   ;;;; exit ocde : 120
+
+   ;;;; find
+    xx read_word, string_to_integer   ;; number
+    xx read_word, find   ;; !
+    xx drop   ;; true
+    xx execute_jo
+    xx write_integer
+    xx literal, 10, write_byte
+    xx zero
+　　xx exit_with_TOS                       
+
+   这一部分的修改验证了我们所写的”!”函数是可以运行的。
+   首先定义变量为5，测试得出结果5！=120。
+   然后可以通过输入一个数字(大于1小于13)及函数名称”!”得出阶乘运算的结果。
+  
+
+三、运行结果
+    通过修改第四阶段编码，插入阶乘运算的函数定义，最终实现了对数字x(1<x<13)的阶乘运算。使用emacs运行结果如下：
+c:/360downloads/汇编实验 $ ./factorial.32.exe
+
+Please enter a integer greater than 1 and less than 13 *^_^*
+
+5!=120
+9 !
+362880                                                                                                                          

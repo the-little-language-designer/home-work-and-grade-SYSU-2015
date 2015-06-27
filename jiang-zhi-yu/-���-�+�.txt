@@ -1,0 +1,16 @@
+﻿小组成员：
+蒋至钰  13级4班   13336071
+罗焜元  13级5班   13336138
+林佳涵  13级4班   13336114
+刘忠磊  12级统计  12335147
+
+实验说明：
+共定义了四个函数，分别实现阶乘，求绝对值，求距离，累加。
+函数名分别是：
+define_function "homework_function1", factorial
+define_function "homework_function2", absolutevalue
+define_function "homework_function3", move
+define_function "homework_function4", accumulation
+
+师兄搜索“homework_function”就可以找到所有的四个函数了^_^
+因为exe的文件没办法发过去，所以麻烦师兄自己编译生成一下了

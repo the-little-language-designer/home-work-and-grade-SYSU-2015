@@ -1,0 +1,110 @@
+﻿一.目的：
+
+（1）阶乘函数
+
+   求得输入数值的阶乘。
+
+（2）斐波那契数求解
+
+   求得输入数值对应个数的斐波那契数，比如输入6，那么求得第六个斐波那契数是8。
+
+（3）组合数
+
+   计算组合数，即从m个元素中抽取n个元素组合个数。
+
+二.内容：（在第五阶段代码中更改，源代码文件名为factorial&combination&fibonacci.fasm，程序名为factorial&combination&fibonacci.32.AAA为了能够上传附件，修改了后缀名）
+
+  
+    (1)阶乘：
+   
+  算法：
+         1.复制一次，栈顶数如果为1，结束；如果不为1，跳到第2步
+         2.复制一次，栈顶减一，对栈顶进行阶乘运算
+         3.将栈顶和栈顶下一层栈的数值相乘，结束。
+   
+  代码：（位置2107-2113行）
+      define_function "fact", factorial
+      xx dup, one?, false?branch, 2
+      xx end
+      xx dup , sub1, factorial
+      xx multiple
+      xx end   
+   
+  测试及用法：
+
+      在界面中输入 k fact . 可以得到数值 k！. 
+      
+
+   （2）斐波那契数求解
+
+  算法：
+     1.复制栈顶元素一次，判断如果是0，则结束，如果不是0，跳到第二步；
+     2.复制栈顶元素一次，判断如果是1，则结束，如果不是1，跳到第三步；
+     3.复制栈顶元素一次，将栈顶元素数值减一，然后求得其对应个数的斐波那契数值储存；
+     4.栈顶元素和栈顶下一层元素数值对换，此时的栈顶元素减2，然后求得其对应个数的斐波那契数值储存；
+     5.将栈顶元素和栈顶下一层元素相加，结束
+
+  代码：（位置2138-2147行）
+    define_function "fibon", fibonacci
+    ;;<< number -- number >>
+     xx dup, zero?,false?branch,2
+     xx end
+     xx dup, one?,false?branch,2
+     xx end
+     xx dup, sub1, fibonacci
+     xx swap, sub1, sub1, fibonacci
+     xx addition
+     xx end            
+
+  测试及用法：
+
+     比如，在界面中输入  6 fibon . 可以得到数值 8.
+     
+
+ （3）组合数
+ 
+  算法：
+      1.计算m-n，入栈（通过新定义的primitive function “subpush” 实现：subpush的功能是使栈内元素由n|m变为m-n|m|n）
+      2.计算m!/(m-n)! （通过阶乘函数factorial除法运算division以及交换函数swap实现）
+      3.计算m!/(m-n)!/n!，即组合数。（通过阶乘函数factorial除法运算division以及交换函数swap实现） 
+
+  代码：（subpush位置2116-2124行，combination位置2126-2136行）
+    define_primitive_function "subpush", subpush
+    ;; << a b --- a-b a b >>
+    pop_argument_stack rbx
+    pop_argument_stack rax
+    push_argument_stack rbx
+    push_argument_stack rax
+    sub rax, rbx
+    push_argument_stack rax
+    next                         
+
+    ;;combin is combination ::b of a
+    define_function "combin", combination
+    ;;<< a, b -- a combination b, a>b >>
+    xx subpop
+    xx swap
+    xx factorial,swap,factorial
+    xx division
+    xx swap
+    xx factorial
+    xx division
+    xx end                           
+                              
+   测试及用法：
+
+   输入 a b subpop，栈内内容变为a-b|a|b
+
+   输入 a b combin, 即求得a个元素中取b个元素的组合数。
+  
+三.组员信息
+   
+   辛昱璇 13336216 13级6班
+
+   项维佳 13336212 13级6班
+
+   许桦璇 13336221 13级5班
+
+   王瑞婕 13336184 13级5班
+
+   

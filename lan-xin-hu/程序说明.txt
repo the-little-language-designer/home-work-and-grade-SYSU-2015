@@ -1,0 +1,38 @@
+-程序目的-
+验证一个三位数是否是水仙数，如果是则输出1，如果不是则输出0。
+
+-水仙数-
+一个数是水仙数，当且仅当它是一个三位数，且其各数位的三次方之和等于其本身。
+
+-程序说明-
+本程序基于作业资料的第二阶段代码增补而成。
+本程序将原代码中的第408行修改为本函数的函数名、第417行至441行修改为注释，其他部分没有任何删减。
+本程序自第443开始增补，至465行为止，增补内容如下。各代码目的已用注释标出。
+
+-增补内容-
+define_function "digit", digit                                       ;;辅助函数，将三位数拆分为各数位。
+   ;; << three-digit number -- the unit , decade , hundreds place >>   
+   xx literal,10                                                     ;;压10入栈。
+   xx moddiv                                                         ;;将个位数拆出。
+   xx literal,10                                                     ;;压10入栈。
+   xx moddiv                                                         ;;将十位、百位拆出。
+   xx end                                                            ;;辅助函数结束。
+
+define_function "power3", power3                                     ;;辅助函数，将栈中数进行三次方运算。
+   ;; << n -- n^3 >>                                                  
+   xx literal,3                                                      ;;压3入栈。
+   xx power                                                          ;;对栈中数进行三次方运算。
+   xx end                                                            ;;辅助函数结束。
+
+define_function "narccissistic_number", narccissistic_number         ;;主函数，验证待验数是否是水仙花数。
+    ;; << n -- n is a narccissistic number? true or false >>
+    xx literal,153                                                   ;;压待验数入栈，此处以153为例。
+    xx dup                                                           ;;复制待验数，留待最后匹配。
+    xx digit,power3,swap                                             ;;拆分三位数、将百位数三次方、交换操作数。
+    xx power3,addition,swap                                          ;;十位数三次方、与百位数三次方的结果相加、交换操作数。
+    xx power3,addition                                               ;;个位数三次方、与之前的和相加。此时栈顶存在的数就是待验数各数位三次方之和。
+    xx equal?                                                        ;;测试和与待验数是否相同，若相同，则待验数为水仙花数，输出1，否则输出0。
+    xx exit_with_TOS                                                 ;;主函数结束。
+
+-附注-
+为了方便检验，特注明：水仙花数有且仅有4个，分别为153、370、371、407。

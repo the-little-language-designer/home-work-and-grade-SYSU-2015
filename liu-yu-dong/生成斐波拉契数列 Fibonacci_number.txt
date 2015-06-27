@@ -1,0 +1,21 @@
+﻿；；求出斐波拉契数列   这个不是我们组的，卢俊澎同学的，给了我们很多指导哈^_^
+
+define_function "Fibonacci_number", Fibonacci_number
+        xx zero,one
+        xx xswapxx
+        xx help_Fibonacci_number
+        xx drop
+        xx end
+
+define_function "help_Fibonacci_number", help_Fibonacci_number
+        xx dup, zero?, false?branch,2 
+        xx      end
+        xx sub1
+        xx xxoverx
+        xx addition
+        xx swap
+        xx taca, help_Fibonacci_number 
+
+
+
+

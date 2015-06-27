@@ -1,0 +1,18 @@
+﻿;;阶乘 输入一个数，再输入factorial，可求出阶乘
+
+define_function "factorial", factorial
+        xx dup
+        xx help_fact
+        xx drop
+        xx end
+
+
+define_function "help_factorial", help_fact
+        xx dup,one?,false?branch,2
+        xx end
+        xx sub1
+        xx dup
+        xx xswapxx
+        xx multiple
+        xx swap
+        xx taca, help_fact            

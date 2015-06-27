@@ -1,0 +1,42 @@
+1.綜述
+我們小組做的是第一小題，寫的是primitive function。
+我們小組想要實現的功能是計算組合數，函數名是combination。
+2.函數說明
+如在一個4人的小組裡取出2個人組成一個小小組，共有6種可能，即4C2＝6。
+該運算在組合數學，概率論等領域應用廣泛。
+aCb的計算公式為a*(a-1)*...*(a-b+1)/b!,其中b!代表b的階乘。
+如果a是正數，則可以寫成a!/((a-b)!*b!)，然後完全用階乘來表示。
+但這樣的話，需要額外定義階乘，而且對a<b和a非正不適用，另外在頻繁調用的場合調用其它函數易帶來效率下降。
+因此我們為這運算專門制定primitive function。
+3.算法大致思路
+鑒於計算公式中，分子和分母都是b項，我們的思路是，一開始rax置1，然後乘以a除以1，然後乘以a-1除以2，然後乘以a-2除以3，直到最後乘以a-b+1除以b。
+每一輪循環做一次乘法和一次除法。
+之所以是分子遞減分母遞增，是為了保證每次都能整除。比如b往往不能整除a。
+這麼做以後，進行完第r次循環，rax保存的就是aCr，都是整數且各有意義。
+4.細節問題與解決措施
+jae是大於等於時執行，為了在計數器等於b時終止，先讓b減1。
+imul,idiv都是把得數存在rax，rcx用於計數和待除數，rbx用於待乘數，rdx就用於放b來判斷循環終止了。但idiv會把餘數存在rdx，我們並不需要，rdx也被佔用了。我們的解決辦法是，在做除法前用push把b壓棧保護，完成除法後再pop出棧提取使用，用完就壓棧保存。
+完整代碼如下：
+（這段代碼另存於cicada-nymph_homework.fasm中，也嵌在第5階段代碼cicada-nymph.fasm中間，在那裡可以搜索得到）
+;;HOMEWORK START
+define_primitive_function "combination", combination
+   ;; << a, b -- a C b >>
+   pop_argument_stack rbx;提取b
+   dec rbx;為了讓後面循環在計數器等於b時停止，讓它減1
+   push rbx;保留b並騰出寄存器rbx
+   pop_argument_stack rbx;提取a
+   xor rcx,rcx;計數器清零
+   xor rax,rax;清零
+   inc rax;加1，以便接下來作乘除
+   lp:;循環開始
+   imul rbx;做乘法
+   dec rbx;待乘數減1
+   inc rcx;待除數加1
+   idiv rcx;做除法
+   pop rdx;提取b-1
+   cmp rdx,rcx;與計數器比較
+   push rdx;將b-1壓棧保存
+   jae lp;若計數器小於等於b,繼續循環，否則循環終止
+   push_argument_stack rax;輸出最後得數
+   next
+;;HOMEWORK END

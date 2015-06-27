@@ -1,0 +1,11 @@
+﻿
+;;<<n,a,b -- n*(a+b)/2>> n为项数，a是首项，b是末项
+
+define_function "sum_ap", summation_ap 
+
+xx addition
+xx multiple
+xx literal,2
+xx division
+xx end
+        

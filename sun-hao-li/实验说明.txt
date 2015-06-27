@@ -1,0 +1,32 @@
+﻿第一个是 四个数字逆序排列输出
+define_function "swap4", swap4
+  xx xxxswapx
+  xx xxswapx
+  xx swap
+  xx end   
+
+输入： 12 43 1 5 swap4
+输出：5 1 43 12
+
+第二个函数 
+define_function "help_ab", help_ab
+  xx dup
+  xx negative?
+  xx dup
+  xx zero?
+  xx swap
+  xx subtraction
+  xx multiple
+  xx end
+
+define_function "ab",ab
+  xx help_ab
+  xx end     
+输入 ：-4 ab
+输出 ：4
+
+输入 ：4 ab
+输出： 4
+
+输入 ：0 ab
+输出 ：0

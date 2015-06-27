@@ -1,0 +1,22 @@
+;;HOMEWORK START
+define_primitive_function "combination", combination
+   ;; << a, b -- a C b >>
+   pop_argument_stack rbx;提取b
+   dec rbx;為了讓後面循環在計數器等於b時停止，讓它減1
+   push rbx;保留b並騰出寄存器rbx
+   pop_argument_stack rbx;提取a
+   xor rcx,rcx;計數器清零
+   xor rax,rax;清零
+   inc rax;加1，以便接下來作乘除
+   lp:;循環開始
+   imul rbx;做乘法
+   dec rbx;待乘數減1
+   inc rcx;待除數加1
+   idiv rcx;做除法
+   pop rdx;提取b-1
+   cmp rdx,rcx;與計數器比較
+   push rdx;將b-1壓棧保存
+   jae lp;若計數器小於等於b,繼續循環，否則循環終止
+   push_argument_stack rax;輸出最後得數
+   next
+;;HOMEWORK END

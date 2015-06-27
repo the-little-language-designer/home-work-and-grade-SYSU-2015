@@ -1,0 +1,26 @@
+﻿一.在文件cicada-nymph.fasm的3752行添加了该段代码，函数名为dengcha
+define_function "dengcha", dengcha
+   xx dup
+   xx add1
+   xx multiple
+   xx literal, 2
+   xx division
+   xx end   
+
+二.功能
+输入一个大于等于1的正整数。实现首位数为1，公差为1，末位数为该数的等差数列求和
+
+三.测试
+使用线串码解释器运行文件
+输入一个大于等于1的数，然后空格输入dengcha
+例如，首位数为1，末位数为10，公差为1的等差数列求和时
+输入：
+10 dengcha
+可得到：
+ * 1 *  ——10——
+ * 1 *  ——55——
+
+四.作业作者
+姓名：郭一鸣
+学号：13336047
+班级：2013级三班

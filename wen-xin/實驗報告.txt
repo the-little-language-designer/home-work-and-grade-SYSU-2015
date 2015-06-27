@@ -1,0 +1,107 @@
+﻿　　匯編實驗報告
+　　
+　　組員：
+　　溫馨 12335207
+　　吳虹苗 12335209
+　　楊婷 12335250
+　　
+　　實驗期望：
+　　　　用組合語言來實現一個簡單的程式語言的解譯器。
+　　
+　　實驗前準備：
+　　step1:下載fasm匯編器，
+　　在助教給的網址https://github.com/the-little-language-designer/fasm進行下載，資料夾中包含fasm匯編的一些例子，以及在不同作業系統下的版本。其中的readme文檔更是詳盡地介紹了flat assembler，有助我們更好地理解並在其環境下工作。
+　　step2:下載小蟬代碼
+　　網址：https://github.com/the-little-language-designer/cicada
+　　連結中包含的檔，platform-configuration.inc是用來對平臺進行設置，以適應不同平臺的需求。著重看一個fasm檔，cicada-nymph.fasm。
+　　step3:下載emacs
+　　https://github.com/the-little-language-designer/student-emacs，
+　　按照README檔的步驟安裝emacs以及進行配置以適應小蟬。（比如cicada-nymph-mode，fasm-mode）
+　　
+　　實驗過程：
+　　熟悉各軟體，初步瞭解小蟬（小蟬的原始程式碼以及小蟬所解釋的語言）
+　　FASM：
+　　作為匯編器的選擇，在網上查詢資料關於組合語言的學習，主流或是說大多數人選擇的是masm匯編器。在網上搜索了一些資料大概明白了編譯器的工作原理。
+　　“編譯器是什麼？從本質上看是一段代碼，而從功能上看可以將一段代碼等價地轉化為另一段代碼。”有時候編譯器會輸出exe檔，但機器代碼也算是一種語言不是嗎？ 
+　　在下載之後我們可以到http://flatassembler.net/下載examples，在fasm中進行編譯。
+　　
+　　【進一步研究小蟬代碼】
+　　在小蟬的介紹文檔中，我們瞭解到助教把實現中的每個關鍵步驟凝結成可以獨立工作的程式。像是幼蟲的年齡，分為齡一至齡五，五個階段的代碼。
+　　
+　　資料夾有cicada-nymph的fasm格式檔，這個就是齡一階段的匯編代碼。我們可以用編輯器打開它，這部分代碼是關於一個基本的解譯器。
+　　此段代碼多次重新命名一些寄存器的名字或是一些匯編指令及虛擬指令。是為了建造小蟬的獨特語言風格？
+　　
+　　繼續打開齡二階段的代碼
+　　齡二階段主要是針對線串碼的基本指令。比如說定義一個入棧的宏。
+　　
+　　接下來的齡三是關於基本的輸入輸出以及跳轉指令；齡四基本的REPL；最終的齡五階段包含被載入的核檔，編譯器，對檔的載入還有進行中的小蟬語。
+　　
+　　打開齡五階段的資料夾，我們試著對匯編代碼進行同前幾階段同樣的操作，
+　　此時的代碼，已經是“完整”的解譯器原始程式碼了。
+　　
+　　素函數（primitive function）的定義
+　　定義了add1,add2加減乘除，同餘，判斷是否相等，等一系列簡單數操作的素函數。還有一系列對棧元素的操作over,tuck,swap,dup,drop。輸入輸出函數；save，fetch函數;等等。
+　　在這段代碼中，實現了我們可以直接在core檔中修改以達到測試的目的，當然也可以直接修改匯編代碼，以完成對解譯器的完善。
+　　
+　　
+　　
+　　實驗作業：
+　　現在讓我們以第五階段代碼為基礎，完成作業。
+　　一、 實現求最大公約數的函數
+　　在cicada-nymph.fasm文件中添加如下代碼：
+　　
+　　define_function "gcd", gcd
+　　   xx dup, zero?, false?branch, 3
+　　   xx	drop
+　　   xx	end
+　　   xx	swap, over, moddiv, drop
+　　   xx taca, gcd
+　　   xx end
+　　
+　　一個特別簡單的實現求兩個數最大公約數的函數
+　　把這段代碼嵌入解譯器原始程式碼中，對其進行編譯。在Fasm中編譯運行，得到了以下的檔
+　　一個名為cicada-nymph.32的exe檔，讓我們來運行它。當然按兩下好像並不能看到任何效果。這時，我們要用emacs裡的shell來實現它。
+　　好的，現在來操作測試系下寫的函數吧,在core.cn檔裡寫入測試用例：
+　　
+　　cr
+　　1 2 gcd .
+　　4 8 gcd .
+　　7 50 gcd .
+　　cr
+　　
+　　測試結果：
+　　1 4 1
+　　
+　　二、實現求斐波那契數列的第n項值
+　　在core.cn文件裡寫入如下代碼：
+　　
+　　: execute_fib
+　　  dup one? if
+　　    drop drop end
+　　  then
+　　  sub1 xx|swap|x swap over add x|swap|xx
+　　  execute_fib
+　　  end
+　　; define-function
+　　
+　　: fib
+　　  1 1 x|swap|xx
+　　  execute_fib
+　　  end
+　　; define-function
+　　
+　　在core.cn檔裡寫入測試用例如下：
+　　
+　　cr
+　　1 fib .
+　　2 fib .
+　　3 fib .
+　　4 fib .
+　　5 fib .
+　　6 fib .
+　　7 fib .
+　　cr
+　　cr
+　　
+　　測試結果：
+　　1 1 2 3 5 8 13

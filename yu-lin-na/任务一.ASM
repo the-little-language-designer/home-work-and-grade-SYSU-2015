@@ -1,0 +1,63 @@
+;import ¹¹½¨
+format	PE  GUI  4.0
+entry	_start
+
+;
+;data section..
+;
+
+section  '.data'  data	 readable
+
+       lpCaption   db	  'chanyu ',0
+       lpText	   db	  'hello,welcome to chanyu',0
+
+;
+;code section
+;
+
+section   '.code'  code  readable  executable
+
+_start:
+	
+	push 40h
+    push lpCaption
+    push lpText
+    push 0h
+    call [MessageBox]
+    push 0h
+    call [ExitProcess]
+
+;>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+;
+;import section
+;
+
+section  '.import'  import  data readable writeable
+
+     ;IMAGE_IMPORT_DESCRIPTOR
+
+     dd 0, 0, 0, RVA user32_dll, RVA user_thunk
+     dd 0, 0, 0, RVA kernel_dll, RVA kernel_thuk
+     dd 0, 0, 0, 0, 0
+ 
+      ; DLL Name
+
+     user32_dll      db  'user32.dll',0
+     kernel_dll      db  'kernel32.dll',0
+     
+     ; THUNK DATA
+     user_thunk:
+     MessageBox      dd   RVA msg_byname
+		     dd   0
+    
+     kernel_thuk:
+     ExitProcess     dd   RVA process_byname
+		     dd   0
+ 
+     ;import_Byname 
+     msg_byname      dw   0
+		     db   'MessageBoxA',0
+
+     process_byname  dw   0
+		     db   'ExitProcess',0

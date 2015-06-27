@@ -1,0 +1,6 @@
+﻿；；平方
+
+define_function "square", square
+        xx dup
+        xx multiple
+        xx end       

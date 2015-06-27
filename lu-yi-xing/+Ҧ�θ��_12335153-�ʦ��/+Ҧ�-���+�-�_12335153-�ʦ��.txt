@@ -1,0 +1,117 @@
+﻿   师兄你好，我试着用emacs和fasm来写，但不知道是电脑配置还是操作不对，总是出错，我没有去过几次实验课，对cicada-language也不了解，所以我这次用的Visual studio来写的，用的masm做编译器，希望师兄能谅解。
+
+实验一   
+实验目的：查找源字符串在目的字符串中首次出现的位置并返回匹配的位置。
+（1）首先要进行输入操作，用“call readstring”来进行源字符串source与目的字符串target的输入操作；然后要确定source的长度以在target中截取与之长度相等的字符串，用到“lengthof source-1 DUP(?),0”；定义一个memo用于保存所截取的字符串首字母的位置，同时定义一个count最后用来衡量查找是否结束。
+（2）在主程序中，首先要把target和source用call writestring函数打印出来，然后设置若干个循环操作来进行截取：L0:用于初始化ESI寄存器和跳转；L1：用于截取与源字符串等长的字符串，可以说这是本实验的关键所在。在L0中已经把memo即元字符串首字母的地址赋值给EDI，以temp[esi]来储存截取下来的每一个字母，之后实行esi和edi的自加操作来实现截取的移动。在memo确定的情况下，一次截取完成之后要使memo自加，同时把memo的值赋给count：
+相关编码：	
+   L1:                                              
+    mov al,target[edi]                      
+    mov temp[esi],al
+	inc esi
+	inc edi;
+    loop L1
+    
+	add memo,1                                           
+	mov eax,memo
+	mov count,eax                                        
+	.IF count > lengthof target +1 - lengthof source      	
+    jmp quit
+	.ENDIF
+易知在count > lengthof target +1 - lengthof source时就不能再继续截取了，此时跳出L1循环，进行下一步。
+（3）L2循环为比较部分，将在target中截取的temp[esi]与source[esi]相比较，此时用到了cmp函数，若相等则一直进行下去，若不想等则跳转到L0重新截取字符串并进行比较。
+L2:                                           
+	mov  al,temp[esi]	                       
+	cmp  al,source[esi]                     
+    jne  L0	 	                             
+	inc  esi
+	loop L2
+之后的L3则为收尾工作，若成功则显示出成功的提示，用call writestring函数来打印。
+（4）出现没有一次匹配成功的情况时，则调用quit函数，既是此种情况 count > lengthof target +1 - lengthof source出现时。这是要显示查找失败的提示。程序如下：
+ mov edx,offset string4;查找失败的字符串
+	call crlf
+    call writestring
+    .ENDIF
+    call ReadInt
+    exit
+main ENDP
+END main
+
+实验二
+实验目的：实现两个32字节的整数的加法
+WriteString_m  macro  string		;;封装WriteString_m
+			 push edx
+			 mov edx,offset string
+			 call WriteString
+			 pop edx
+			endm
+
+.data
+op1 qword 0a2b2a40674981234h,1111111111111111h,3333333322222222h,05555555566666666h
+;此数为555555556666666633333333222222221111111111111111a2b2a40674981234h
+op2 qword 08010870000234502h,2222222222222222h,4444444466666666h,0bbbb777799999999h
+;此数为bbbb777799999999444444446666666622222222222222228010870000234502h
+sum dword 9 dup(0ffffffffh)
+;此数为000000011110ccccffffffff7777777788888888333333334444444422c32b0674bb5736h	 
+;长度已经足够，考虑到了溢出的情况
+str1 byte "第一个数是：",0
+str2 byte "第二个数是：",0
+str3 byte "和是：",0
+
+.code
+main PROC
+WriteString_m str1
+mov  esi,OFFSET op1
+mov  ecx,8
+call	Display			;调用子程序
+WriteString_m str2
+mov  esi,OFFSET op2
+mov  ecx,8
+call	Display			;调用子程序
+mov	esi,OFFSET op1		; 第一个数的地址
+mov	edi,OFFSET op2		; 第二个数的地址
+mov	ebx,OFFSET sum		; 和的地址
+mov	ecx,8   			; 字的长度
+call	Extended_Add		;调用子程序
+; 输出 sum.
+	WriteString_m str3
+	mov  esi,OFFSET sum
+	mov  ecx,LENGTHOF sum
+	call	Display			;调用子程序
+	call readint 
+	exit
+main ENDP
+Extended_Add PROC
+	pushad						; 将所有的32位通用寄存器压入堆栈
+	clc                			; 清除进位标志
+L1:	mov	eax,[esi]      			; 找到第一个数
+	adc	eax,[edi]      			; 与第二个数相加
+	pushfd              		; 将32位标志寄存器EFLAGS压入堆栈，保留进位标志
+	mov	[ebx],eax      			; 将这部分的和存起来
+	add	esi,4         			; 将3个指针都移动
+	add	edi,4
+	add	ebx,4
+	popfd               		; 将32位标志寄存器EFLAGS取出堆栈,恢复进位标志
+	loop	L1           			; 继续循环
+	mov	dword ptr [ebx],0		; 清除sum的高位
+	adc	dword ptr [ebx],0		; 与剩余的相加
+	popad					;将所有的32位通用寄存器取出堆栈
+	ret
+Extended_Add ENDP
+
+Display PROC
+	pushad					; 将所有的32位通用寄存器压入堆栈
+	mov eax,ecx				;完成 esi=esi+ecx*4的目标，即找到要输出的数的最高位
+	mov edx,4
+	mul edx
+	add esi,eax
+	sub esi,4					
+L2:	mov eax,[esi]				;找到并传给eax
+	call WriteHex				;输出
+	sub  esi,4					;转移到下一地址
+	loop L2
+	popad
+	call crlf
+	ret
+Display ENDP
+

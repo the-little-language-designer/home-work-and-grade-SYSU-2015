@@ -1,0 +1,124 @@
+                                                          汇编实验  
+　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　       张婉倩 12335271     
+　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　       邢在冰 12335230
+　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　       宋佳   12335183
+　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　
+一、实验目的
+   通过对FASM编译器与EMACS宏编译器编译环境的学习，解读老师所传授的各阶段代码，继而，在线串码解释器中编辑新的函数实现斐波那契数列的输出。进一步的，通过更改第五阶段的代码，实现换行的输出，从而使斐波那契数列分行输出。
+
+　
+　　　
+二、实验准备
+   在本实验中，我们利用FASM编译器与EMACS宏编译器这两种工具实现。作为实现汇编语言的FASM编译器，是非常特殊的。首先，重要的是，免费开源；其次，它带一个IDE，支持语法高亮，并且IDE同样也开放源码；另外，它还有一个命令行模式的编译器，使用也据说比较简单，基本上除输入输出文件外不需要任何其它参数。不得不提的是，FASM对windows平台支持比较好。不过，FASM的语法很特别，适应起来我们觉得还是要一些时间。
+   而GNU EMACS与其说它是一个编辑器，倒不如说它是一个以编辑器为主干的环境软体。在我看来，它像是羊水，给各种指令供给实现的场所。总的来说，EMACS一切以编辑器为主，任何的功能都是建基在编辑器之上。
+首先，在我们下载完成所有必须工具后，当然，也包含线串码代码，（https://github.com/the-little-language-designer/cicada-instar）。总体文件夹如下：       
+　　cicada-instar-master 
+　　emacs-24.3-bin-i386(1)
+　　fasm-master
+   然后，我们将通过fasmw进行编译，将老师所给的代码拖入编译器中。首先进行设置容量，选择options中的complier setup，增加memory的值，设置为最大值524288。
+接下来，我们进行代码的解读。
+
+
+
+三、各阶段代码解读
+总体代码分为五个阶段，可以明显看出五个阶段难度递增，逻辑思路很清晰。这里，进行第一部分与第五部分的具体解读。
+
+1st   第一阶段
+第一阶段的代码总体上来讲，用两个字来概括是“定义”，在这一部分，定义新的变量，定义了宏，对一些变量做出了解释，一切都是在为定义新函数做准备。
+具体来讲：
+1)因为FASM编译器的特别，为了方便使用，将诸如寄存器之类的重新命名
+　 rax equ eax
+　 rbx equ ebx
+　 rcx equ ecx
+   也就是在这之后，代码中出现的rax实质是寄存器eax。
+   与之类似的，接下来，在大概43行左右的位置，作者写了几行说明程序，说明一些常用说法在本篇代码中将被简写。
+2)接下来，在中后段，作者定义了一个宏，以便写函数。
+   macro define_function string, jo {
+   define_function__#jo:
+   name__#jo:
+     xx current_free_address$primitive_string_heap
+     make_primitive_string string
+   link__#jo:
+     xx link
+     link = link__#jo
+   jo:
+     xx explain$function
+     ;; here follows a jojo as function-body
+   }     
+   不得不说，宏是一个很棒的发明，对程序员来说真是个福利。具体来讲，宏的使用是利用汇编程序的宏处理能力，在汇编过程中，由汇编程序把宏定义的宏体目标代码替换到宏使用处。也就是说，汇编源程序里使用多少次宏，目标程序里就有多少个宏体的目标代码。因此，使用宏其实并不能简化目标程序，不会减少目标程序占用的存储空间，但也绝不会附加程序的运行时间。
+3)紧接着，程序开始运行，联系上下文，我们容易发现，这个程序本质是在进行variable3的定义。
+   begin_to_interpret_threaded_code:
+   cld ;; set DF = 0, then rsi and rdi are incremented
+   mov rax, first_jojo
+   push_return_stack rax
+   next
+   }
+4)编译运行1st-instar 的cicada-nymph.fasm，没有结果输出。
+
+2nd、 3rd  、4th   第二到第四阶段
+事实上，经过编译运行第二阶段第三阶段第四阶段，均无结果输出，这里不再详细分析，直接进入看上去最为壮观好玩的第五阶段。
+
+5th   第五阶段
+   第五阶段非常的庞大，但是非常的实用。在这一部分，定义了数量庞大的变量跟函数。自然的，定义函数离不开定义宏。据不完全统计，作者定义了180个函数，2个宏，跟许多变量。函数应该对我们来讲是非常亲切的。其中包含可爱的welcome函数，针对栈元素的over,tuck,swap,dup,drop，*address*，*branch*等函数以及加法乘法等运算函数、数值大小的比较函数，自然还有输出输入函数save，fetch函数等等。应有尽有。
+   在本阶段，作者定义了两种宏，一种用来定义primitive函数的，一种是定义普通函数的，使得整个部分条理清晰了些，好懂了些。
+    
+   最后一定要提及的是，在本阶段，定义了一个神奇的非常方便的东西
+   string$name_of_init_file:
+      db "core.cn"
+   .end:
+   length$name_of_init_file = (.end - string$name_of_init_file)
+   define_function "load-init-file", load_init_file
+      ;; << -- >>
+      xx literal, string$name_of_init_file
+      xx literal, length$name_of_init_file
+      xx load_file
+      xx end       
+   也就是说我们可以直接在core.cn中编译并运行程序。
+ 
+
+
+
+四、实验代码
+1.利用第五阶段的配置文件core.cn,在fasmw中进行编译。借用老师所定义的primitive-function和function，定义循环递归函数fibo1来实现斐波那契数列输出。
+　　　以下为函数定义代码：
+　　　: fibo1
+　　　dup one? if drop drop end 
+　　　then sub1  xx|swap|x swap over add x|swap|xx fibo1 end
+　　　; define-function
+　　　
+　　　: fibo
+　　　1 1 x|swap|xx fibo1 end
+　　　; define-function
+　　　其中fibo函数的作用为给出初始值及参数n，然后进入fibo1函数中进行迭代计算。
+　　　
+2.另外，在core.cn配置文件开头已经定义了cr转行函数，但我们也尝试在第五阶段cicada-nymph添加转行函数enter1，代码如下：
+　   define_function "enter1", enter1   ;;go to the next line,defined by groups
+      xx literal, string$enter1
+      xx literal, length$enter1
+      xx write_string
+      xx end
+　
+   　string$enter1:
+　     db 10
+　     .end:
+　   length$enter1 = (.end - string$enter1)
+
+3.然后，给出函数的实现代码：
+　　　7 hi,say .
+　　　 1 fibo . 2 fibo . 3 fibo . 4 fibo . 5 fibo . 6 fibo . 7 fibo . 8 fibo .
+　　　cr
+　　　 9 fibo . 10 fibo . 11 fibo . 12 fibo . 13 fibo . 14 fibo . 15 fibo . 16 fibo .
+　　　enter1
+　　　 17 fibo . 18 fibo . 19 fibo . 20 fibo . 21 fibo . 22 fibo . 23 fibo . 24 fibo .
+　　　enter1
+　　　enter1
+　　　5 hi,say .  
+最后，在fasmw中运行cicada-nymph.fasm并生成结果文件cicada-nymph.32.exe
+
+
+
+五、实验总结
+　　总体来讲，虽然过程并不轻松，但是我们还是完成了这次实验，成功的在老师已给的代码基础上实现了斐波那契数列的输出，并完成了换行。事实上，我们所编辑的代码并不多也不复杂，因为站在了巨人的肩膀上，基本上所有变量的定义还有宏的定义是老师已经完成了的。更确切的说，我们完成了对汇编语言的使用而非编译。
+    但是，我们从老师的代码还有写函数的过程中，学到了很多东西。通过实践获得的知识总是宝贵迷人的。现在，我们认识了FASM，认识了GNU EMACS。并且，我们知道了宏，学会了定义加减乘除而不只是一味的使用它们，还真正在电脑中实现了查址，也懂得了关于栈元素的相关函数的实现。可以说，我们从真正意义上接触了汇编，认识了汇编。
+　　然而，在汇编的路上我们刚刚开始。这个如同刚出生的婴儿一样的语言，我们会好好继续下去。真心感谢助教让我们又有了两个新软件的积累，谢谢这么多天的指教。
+

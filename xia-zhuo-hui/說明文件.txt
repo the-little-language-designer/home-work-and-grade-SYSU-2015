@@ -1,0 +1,21 @@
+﻿這一個是出來之後顯示'Good morning everybody!'的代碼
+
+代碼如下
+
+STACK1 SEGMENT PARA STACK
+       DW 128 DUP (?)
+STACK1 ENDS
+DATA SEGMENT
+STRING DB 'Good morning everybody!',24,10,'$'
+DATA ENDS
+CODE SEGMENT
+       ASSUME CS: CODE, DS: DATA
+START: MOV AX, DATA
+       MOV DS, AX
+       MOV DX, OFFSET STRING
+       MOV AH, 9
+       INT 21H
+       MOV AH, 4CH
+       INT 21H
+CODE ENDS
+     END START

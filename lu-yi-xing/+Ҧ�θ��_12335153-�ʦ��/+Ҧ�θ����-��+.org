@@ -1,0 +1,27 @@
+L1: 
+mov al,target[edi]                      
+    mov temp[esi],al
+	inc esi
+	inc edi;
+    loop L1
+    
+	add memo,1                                           
+	mov eax,memo
+	mov count,eax                                        
+	.IF count > lengthof target +1 - lengthof source      	
+    jmp quit
+	.ENDIF
+L2:                                           
+	mov  al,temp[esi]	                       
+	cmp  al,source[esi]                     
+    jne  L0	 	                             
+	inc  esi
+	loop L2
+mov edx,offset string4;²éÕÒÊ§°ÜµÄ×Ö·û´®
+	call crlf
+    call writestring
+    .ENDIF
+    call ReadInt
+    exit
+main ENDP
+END main

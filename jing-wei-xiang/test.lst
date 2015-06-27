@@ -1,0 +1,72 @@
+Microsoft (R) Macro Assembler Version 6.11		    06/01/15 10:24:47
+tempfile.asm						     Page 1 - 1
+
+
+ 0000				       DATA SEGMENT
+				       ORG 3500H
+ 3500 31 32 33 34		       ASCLL DB '1','2','3','4'
+ 3504 0000			       BIN DW 0
+ 3506 0A			       TA DB 0AH
+ 3507				       DATA ENDS
+				       
+ 0000				       STACK SEGMENT STACK
+ 0000  0032 [				    DW 50 DUP(?)
+        0000
+       ]
+ 0064				       TOP LABEL WORD
+ 0064				       STACK ENDS
+				       
+ 0000				       CODE SEGMENT
+					    ASSUME CS:CODE,DS:DATA,SS:STACK
+ 0000  B8 ---- R		       START: MOV AX,STACK
+ 0003  8E D0				      MOV SS,AX
+ 0005  BC 0064 R			      MOV SP,OFFSET TOP
+ 0008  1E				      PUSH DS
+ 0009  2B C0				      SUB AX,AX
+ 000B  50				      PUSH AX
+ 000C  B8 ---- R			      MOV AX,DATA
+ 000F  8E D8				      MOV DS,AX
+ 0011  B9 0004				      MOV CX,4
+ 0014  B8 0000				      MOV AX,0
+ 0017  B6 00				      MOV DH,0
+ 0019  BB 3500 R			      MOV BX,OFFSET ASCLL
+ 001C  8A 17			       NEXT:  MOV DL,[BX]
+ 001E  80 E2 0F				      AND DL,0FH
+ 0021  F6 26 3506 R			      MUL [TA]
+ 0025  03 C2				      ADD AX,DX
+ 0027  43				      INC BX
+ 0028  A3 3504 R			      MOV [BIN],AX
+ 002B  E2 EF				      LOOP NEXT
+ 002D  C3				      RET
+ 002E				       CODE  ENDS
+					      END START
+
+
+Microsoft (R) Macro Assembler Version 6.11		    06/01/15 10:24:47
+tempfile.asm						     Symbols 2 - 1
+
+
+
+
+Segments and Groups:
+
+                N a m e                 Size     Length   Align   Combine Class
+
+CODE . . . . . . . . . . . . . .	16 Bit	 002E	  Para	  Private 
+DATA . . . . . . . . . . . . . .	16 Bit	 3507	  Para	  Private 
+STACK  . . . . . . . . . . . . .	16 Bit	 0064	  Para	  Stack	  
+
+
+Symbols:
+
+                N a m e                 Type     Value    Attr
+
+ASCLL  . . . . . . . . . . . . .	Byte	 3500	  DATA	
+BIN  . . . . . . . . . . . . . .	Word	 3504	  DATA	
+NEXT . . . . . . . . . . . . . .	L Near	 001C	  CODE	
+START  . . . . . . . . . . . . .	L Near	 0000	  CODE	
+TA . . . . . . . . . . . . . . .	Byte	 3506	  DATA	
+TOP  . . . . . . . . . . . . . .	Word	 0064	  STACK	
+
+	   0 Warnings
+	   0 Errors

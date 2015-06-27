@@ -1,0 +1,158 @@
+﻿组员有：
+卢俊澎 13336133 13级数计4班
+刘佩儿 13336125 13级数计4班
+马诗雨 13336145 13级数计5班
+
+代码说明：
+1.没有删改原来的代码
+2.增加函数：
+ 
+(一）Fibonacci_number
+	(1)名称：Fibonacci_number
+
+	(2)位置在cicada-nymph.fasm的 2056-2072行
+
+	(3)作用：输出Fibonacci数列的0-第n项，help_Fibonacci_number用于递归，n是	         栈顶元素
+
+	(4)效果图：在Fibonacci_number.PNG
+	
+	(5)代码：
+
+define_function "Fibonacci_number", Fibonacci_number
+        ;;<<number -- 0 1 1 2 3 5 8...>>
+        xx zero,one
+        xx xswapxx
+        xx help_Fibonacci_number
+        xx drop
+        xx end
+
+define_function "help_Fibonacci_number", help_Fibonacci_number
+        xx dup, zero?, false?branch,2 
+        xx      end
+        xx sub1
+        xx xxoverx
+        xx addition
+        xx swap
+        xx taca, help_Fibonacci_number
+   
+（二）encrypt and decrypt
+	（1）名称： encrypt   ；decrypt
+
+	（2）位置： 2074-2125行      
+
+	（3）作用：把参数栈元素全部加上偏移量，加密
+
+	（4）效果图：encrypt and decrypt.PNG
+
+	（5）代码：
+
+define_function "encrypt", encrypt
+        ;;<<  a1, a2, a3,..., an, offset -- a1+offset, a2+offset, a3+offset,...,an+offset >>
+        xx get_amount_of_stack
+        xx sub1
+        xx dup
+        xx help_encrypt_1
+        xx swap
+        xx drop
+        xx help_encrypt_2 
+        xx end
+
+define_function "decrypt", decrypt
+        ;;<<  a1, a2, a3,..., an, offset -- a1-offset, a2-offset, a3-offset,...,an-offset >>
+        xx negate
+        xx encrypt
+        xx end
+
+define_function "help_encrypt_1", help_encrypt_1
+        xx dup, zero?, false?branch, 3
+        xx      drop,end
+        xx xswapxxx
+        xx xoverxxx
+        xx addition
+        xx push_to_system_stack
+        xx sub1
+        xx taca, help_encrypt_1
+
+define_primitive_function "push_to_system_stack", push_to_system_stack
+        pop_argument_stack rax
+        push rax
+        next
+
+define_function "help_encrypt_2", help_encrypt_2
+        xx dup, zero?, false?branch, 3
+        xx      drop,end
+        xx pop_back_argument_stack
+        xx swap
+        xx sub1
+        xx taca, help_encrypt_2
+
+define_primitive_function "pop_back_argument_stack", pop_back_argument_stack
+        pop rax
+        push_argument_stack rax
+        next     
+
+（三）get_amount_of_stack  
+	（1）名称：get_amount_of_stack
+
+	（2）作用：入栈参数栈元素个数
+
+	（3）位置：2091-2099行 
+
+	（4）效果图：get_amount_of_stack.PNG
+
+	（5）代码：
+ 
+define_primitive_function "get_amount_of_stack", get_amount_of_stack
+        mov rax, [pointer$argument_stack]
+        mov rbx, address$argument_stack    
+        sub rax, rbx
+        xor rdx, rdx
+        mov rbx, jo_size
+        idiv rbx
+        push_argument_stack rax 
+        next   
+
+（四）square
+	（1）名称：square
+	
+	（2）作用：算出栈顶元素的平方
+
+	（3）位置：2146-2150
+
+	（4）效果图：square.PNG
+
+	（5）代码：
+
+define_function "square", square
+        ;;<< n -- n*n>>
+        xx dup
+        xx multiple
+        xx end  
+
+（五） factorial
+	（1）名称：factorial
+
+	（2）作用：算出栈顶元素的阶乘
+
+	（3）位置：2129-2144
+
+	（4）效果图：factorial.PNG
+
+	（5）代码：
+
+define_function "factorial", factorial
+        ;;<< n -- n!>>
+        xx dup
+        xx help_fact
+        xx drop
+        xx end
+
+define_function "help_factorial", help_fact
+        xx dup,one?,false?branch,2
+        xx      end
+        xx sub1
+        xx dup
+        xx xswapxx
+        xx multiple
+        xx swap
+        xx taca, help_fact                                          

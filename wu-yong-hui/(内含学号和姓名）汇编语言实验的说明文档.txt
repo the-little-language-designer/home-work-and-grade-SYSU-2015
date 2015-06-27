@@ -1,0 +1,33 @@
+﻿小组成员︰
+姓名︰吴永辉 学号︰12335213 班級︰2012级科计
+姓名︰刘立承 学号︰12335138 班級︰2012级科计
+姓名︰陶冠兰 学号︰12335188 班級︰2012级统计
+
+汇编语言实验说明文档
+
+小组在core.cn内的最后部份新增了五个小函数(理解为含并成一个大函数)，并也写了小测试，这五个函数分别是求2个整数的最大值、求2个整数的最小值、求2个正整数的最大公约数、求2个正整数的最小公倍数、还有输出字符串。现在再作说明一下。
+
+   首先，有: max
+dup2 greater-than? if drop end then swap drop end
+; define-function   意思是说先定义一个max函数，dup 2 代表复制2个整数并入栈(假设为a,b，方便叙述)，greater-than?代表若a大于b，则把后者丢掉井结束(drop end)。(then)否则将这2个整数互换位置(swap)，然后再把互换位置后的后者丢掉(drop end)，从而得出最大值。最后算法结束。
+
+   其次，有: min
+dup2 less-than? if drop end then swap drop end
+; define-function      意思是说先定义一个min函数，dup 2 代表复制2个整数并入栈(假设为a,b，方便叙述)，less-than?代表若a小于b，则把后者丢掉井结束(drop end)。(then)否则将这2个整数互换位置(swap)，然后再把互换位置后的后者丢掉(drop end)，从而得出最小值。最后算法结束。
+     
+      
+   然后，有: gcd
+dup zero? if drop end then swap over mod gcd end
+; define-function    意思是说复制2个正整数并入栈，若b=0，则最大公约数就是a。否则交换a、b，并对b与a进行辗转相除法(利用辗转相除法求出gcd的原理)，令r为余数，b除以a，一直递归下去，一直到r=0，这时候a就是最大公约数。然后算法结束。换言之，over mod gcd end可以理解为有r=b mod a，最终目标是证明gcd(b,a)=gcd(b,r)。最后算法结束。
+
+   之后有
+: lcm
+dup2 gcd div mul end
+; define-function  意思是说定义一个求2个正整数的最小公倍数的函数，先复制2个正整数并入栈，而且因为最小公倍数=两数相乘再除以最大公约数，即是有gcd div mul，最后输出结果并结束。
+
+   最后，有: mytest
+"good" write-string
+cr
+"hello" write-string
+cr
+end   意思是说，定义一个输出字符串的函数(mytest)，定义了good 和hello，第2和第4行的cr代表回车，最后write-string代表输出字符串。最后算法结束。

@@ -1,0 +1,90 @@
+﻿实验内容：基于第5段代码，定义新的primitive_function及function。
+具体内容：
+1."none"，-1(row 1858)
+定义一个primitive_function，在栈顶添加一个-1，为之后的程序做准备。
+define_primitive_function "mone", mone
+    ;; << --1 >>
+    xor rax, rax
+    dec rax
+    push_argument_stack rax
+    next        
+
+2."mul1"，数乘(row 1946)
+定义一系列的primitive function，分别用以实现将栈顶的数与某数相乘功能。
+N*1：
+define_primitive_function "mul1", mul1
+    ;; << n -- n*1 >>
+    pop_argument_stack rax
+    imul rax,1
+    push_argument_stack rax
+    next
+
+N*2：
+define_primitive_function "mul2", mul2
+    ;; << n -- n*2 >>
+    pop_argument_stack rax
+    imul rax,2
+    push_argument_stack rax
+    next
+
+N*3：
+define_primitive_function "mul3", mul3
+    ;; << n -- n*3 >>
+    pop_argument_stack rax
+    imul rax,3
+    push_argument_stack rax
+    next
+    
+N*4：
+define_primitive_function "mul4", mul4
+    ;; << n -- n*4 >>
+    pop_argument_stack rax
+    imul rax,4
+    push_argument_stack rax
+    next
+
+N*8：
+define_primitive_function "mul8", mul8
+    ;; << n -- n*8 >>
+    pop_argument_stack rax
+    imul rax,8
+    push_argument_stack rax
+    next       
+
+3."Fnumber"，斐波那契数列  (row 2151)
+通过定义一个function，当输入1—n的数列时，实现输出n+1位的斐波那契数列（1，1，2，3……）的功能。
+define_function "Fnumber", Fnumber
+      xx one,one
+      xx xswapxx
+      xx help_Fnumber
+      xx drop
+      xx end
+     
+define_function "help_Fnumber", help_Fnumber
+      xx dup, zero?, false?branch,2 
+      xx end
+      xx sub1
+      xx xxoverx
+      xx addition
+      xx swap
+      xx taca, help_Fnumber
+
+*实现过程：
+输入数列入栈，以1、1作为数列首项，用swap函数更改栈内项位置，为累加做准备。通过辅助函数实现每两项的累加过程，其中使用了递归的方法，直到判定条件为1时跳出。用drop函数去掉栈顶的判断项1，结束运行。输出结果。
+
+4."Fnumber_sub"，斐波那契数列变型(row 2166)
+通过定义一个function，当输入1—n的数列时，实现输出n+1位的斐波那契数列的变型，使基数项为负（-1，1，-2，3，-5……）。过程与3相似，不再具体阐述。
+define_function "Fnumber_sub", Fnumber_sub
+      xx mone,one
+      xx xswapxx
+      xx help_Fnumber_sub
+      xx drop
+      xx end
+define_function "help_Fnumber_sub", help_Fnumber_sub
+      xx dup, zero?, false?branch,2 
+      xx end
+      xx sub1
+      xx xxoverx
+      xx subtraction
+      xx swap
+      xx taca, help_Fnumber_sub      

@@ -1,0 +1,17 @@
+﻿
+;;输入一个数，输出这个数到1的数列。
+如：输入5，list，输出 5 4 3 2 1
+define_function "list",list
+        xx dup
+        xx help_fact2
+        xx drop
+        xx end
+
+define_function "help_list", help_list
+        xx dup,one?,false?branch,2
+        xx end
+        xx dup
+        xx sub1
+        xx swap
+        xx sub1
+        xx taca, help_list  

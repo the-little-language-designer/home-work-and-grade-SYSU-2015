@@ -1,0 +1,55 @@
+﻿define_function "help_qnxpfh",help_qnxpfh  ;;求前n项平方和
+;; <<1^2+2^2+3^2+…+n^2=n*(n+1)*(2n+1)/6>>
+   xx dup   ;;n n
+   xx one?   ;;n 0
+   xx zero?   ;;n 1
+   xx add2    ;;n 3
+   xx add3    ;;n 6
+   xx swap    ;;6 n
+   xx dup     ;;6 n n
+   xx add1    ;;6 n n+1
+   xx dup,dup     ;;6 n n+1 n+1 n+1
+   xx addition    ;;6 n n+1 2n+2
+   xx sub1        ;;6 n n+1 2n+1
+   xx multiple     ;;6 n (n+1)*(2n+1)
+   xx multiple     ;;6 n*(n+1)*(2n+1)
+   xx swap         ;;(n+1)*(2n+1) 6
+   xx division     ;;result
+   xx end
+
+
+define_function "qnxpfh", qnxpfh
+;; <<  n -- 1^2+2^2+3^2+…+n^2>>
+   xx help_qnxpfh
+   xx end
+
+
+define_function "fibonacci", fibonacci      ;; 求斐波那契数列的第n个数
+   ;; n must be nature number for now
+   ;; << n -- f[n] >>
+   ;; f[-1]=1, f[0]=0, f[1]=1, f[2]=1, ...
+   xx literal, 0 ;; 0 n
+   xx swap       ;; n 0
+   xx literal, 1 ;; 1 n 0
+   xx swap       ;; n 1 0
+   xx help_fibonacci
+   xx end
+   
+define_function "help_fibonacci", help_fibonacci
+   ;; << f[n-k-1], f[n-k], k -- f[n] >>
+   xx dup                 ;; k k f[n-k-1] f[n-k]
+   xx zero?               ;; 
+   xx false?branch, 4     ;;
+   
+   xx drop                ;; f[n-1] f[n]
+   xx drop                ;; f[n]
+   xx end
+   
+   xx sub1                ;; k-1 f[n-k-1] f[n-k]
+   xx swap                ;; f[n-k-1] k-1 f[n-k]
+   xx xoverxx             ;; f[n-k] f[n-k-1] k-1 f[k-1]
+   xx addition            ;; f[n-k+1] k-1 f[n-k-1]
+   xx xxswapx             ;; k-1 f[n-k] f[n-k+1]
+   xx taca, help_fibonacci
+   ;;when k=1, f[n-k+1]=f[n]=result
+                                      

@@ -1,0 +1,39 @@
+我选择的是任务一，即在线串码解释器中写一个primitive-function或写一个function。我参考第二阶段的代码，并做了更改，更改部分位于代码文件的末尾。我所写的primitive-function的功能是实现数组的排序，用冒泡排序的思想，仅考虑了2个数和3个数的排序问题，primitive-function的代码如下：
+match =windows =64bit, platform machine {
+define_primitive_function "sort2", sort2
+   pop_argument_stack rbx
+   pop_argument_stack rax
+   cmp rax, rbx
+   setg al
+   setl a2
+   movzx rax, al
+   movzx rbx, a2
+   push_argument_stack rax
+   push_argument_stack rbx
+   next
+define_primitive_function "sort3", sort3
+   pop_argument_stack rcx
+   pop_argument_stack rbx
+   pop_argument_stack rax
+   cmp rax, rbx
+   setg al
+   setl a2
+   movzx rax, al
+   movzx rbx, a2
+   cmp rbx, rcx
+   setg a3
+   setl a4
+   movzx rbx, a3
+   movze rcx, a4
+   push_argument_stack rcx
+   cmp rax rbx
+   setg a5
+   setl a6
+   movzx rax, a5
+   movzx rbx, a6
+   push_argument_stack rbx
+   push_argument_stack rax
+   next
+}
+
+函数的功能是取出栈顶中的2或3个元素，按大小对它们进行排序，并将它们重新放回栈中。 

@@ -1,0 +1,53 @@
+﻿我们小组利用第五次的代码，5th-instar文件中的fasm代码进行了修改
+
+重新定义了7个函数，其中有两个 primitive_function
+我们的主要代码从2140行开始2220行截止
+部分primitive function 代码从1875行开始
+
+第一个是阶乘函数：为了显示是我们小组自己的函数定义阶乘名字为：“our_function” ， factorial
+阶乘函数中利用到了已经定义过的primitive funciton 有
+dup, one?, false?branch end 
+利用了已经定义过的 funciton 有 multiple, sub1
+使用方法是入栈一个数后，可以直接输入our_function然后输入“.”出栈
+例如 输入“8 our_function . ”即可输出8的阶乘
+
+
+第二个函数是排列函数，定义为"perm" permuatation：
+perm函数的语句全为调用已经定义过的 funciton，有：swap factorial division end
+使用方法是入栈一个数后，可以直接输入perm然后输入“.“输出结果
+例如 输入”9 6 perm . “就是算 9中 去6个元素的排列。
+当不小心将9和6颠倒输入，程序会输出结果0.这和数学上当在6 个元素中取 9的排列结果一致。
+
+
+第三个函数是双阶乘行数，定义为“our_function2” dfactorial
+利用了上面factorial的函数实现n!!这个函数
+使用方法同第一个
+输入“6 our_function2 ”即可输出6!!
+
+第四个函数是组合函数，定义为”our_function3“ combination:
+combination函数的语句是说那个函数中最多的。
+其中调用了已经定义过的function有: dup2,substraction, factorial, swap,xswapxx,
+division,end,equal?
+使用方法是入栈一个数后，可以直接输入our_function3然后输入“.”，即可输出结果
+例如 输入”9 6 our_function3 .“就是计算 9中 6 个元素的组合。
+注明：如果不慎将输入6和9即输入了，“6 9 our_function3”，依旧可以得到正确结果
+同时我们定义了"our_function_3"作为组合函数的备用函数，其功能相同
+
+
+第五个函数是求绝对值函数，定义为“our_function4”， absolutevalue 
+使用了已经定义过的函数有dup，positive?，negate
+使用方法：输入“-2 our_function4 .” 即可求出-2的绝对值2
+
+
+第六、七个函数是primitive_function：“two”和"two?"
+“two”函数判断栈顶元素是否为2？只有在two?函数中被调用
+“two?”函数在our__function2，dfactotial 里面被调用，作用是如果栈顶元素是2就返回真值。
+“two？”函数的编写仿照one?,zero?函数，经过多次调试之后终于得到想要的结果。two？函数在双阶乘中作为停止递归调用的依据。
+
+组员：
+
+林在峰13336121  林炜锋 13336119
+
+葛旭丹13336042  谌海雯 13336023
+
+ 

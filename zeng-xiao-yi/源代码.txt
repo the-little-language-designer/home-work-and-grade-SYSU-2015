@@ -1,0 +1,179 @@
+﻿define platform windows
+define machine  32bit
+
+;; in fasm, "dup" is a reserved word
+dup equ duplicate
+
+;; in fasm, "end" is a reserved word
+finish equ end
+end equ exit
+
+match =32bit, machine {
+
+jo_size = 4 ;; (byte)
+xx equ dd
+
+rax equ eax
+rbx equ ebx
+rcx equ ecx
+rdx equ edx
+rsp equ esp
+rbp equ ebp
+rsi equ esi
+rdi equ edi
+
+syscall equ int 80h
+
+}
+
+match =windows =32bit, platform machine {
+
+format PE console as "32.exe"
+
+}
+
+match =windows =32bit, platform machine {
+
+entry begin_to_interpret_threaded_code
+section '.text' code writeable readable executable
+
+}
+
+macro define_function string, jo {
+SSEG SEGMENT PARA STACK 'stack'
+DW 100H DUP(0)  ;初始化堆栈大小为100
+SSEG ENDS
+DSEG SEGMENT
+BUF DW 52,53,32,54 ,66,54,71,65,57,98
+DW  75,82,51,52,92,55,100,56,61,89
+COUNT  EQU  $-BUF   ;COUNT的值为BUF所占的字节数
+ STR1  DB  '0-59:','$'
+ STR2  DB  '60-69:','$'
+ STR3  DB  '70-79:','$'
+ STR4  DB  '80-89:','$'
+ STR5  DB  '90-99:','$'
+ STR6  DB  '100:','$'
+ RES    DW  20 DUP(?)  ;在存储区RES中设置15个初值为0的数据
+DSEG ENDS
+
+CSEG SEGMENT
+  ASSUME  CS:CSEG, DS:DSEG
+
+MAIN PROC FAR     ;主程序入口
+   MOV AX,DSEG
+   MOV DS,AX
+START: MOV CX,COUNT/2+1 ;设计数器初值
+       MOV DI,OFFSET RES ;取RES的首址
+       MOV SI,OFFSET  BUF-2;取BUF的首址
+BEGIN: INC  SI
+       INC SI   ;修改SI指针
+       DEC CX   ;设循环次数CX
+       JZ OUTPUT;循环结束,则转OUTPUT
+       MOV AX,[SI];取BUF中第一个数放到AX寄存器
+       CMP AX,60 ;将AX中数据和60进行比较
+       JB LOP1;小于60，则转LOP1
+       CMP AX,70 ;否则，继续与70进行比较
+       JB LOP2 ;小于70，则转LOP2
+       CMP AX,80 ;否则，继续与80进行比较
+       JB LOP3 ;小于80，则转LOP3
+       CMP AX,90 ;否则，继续与90进行比较
+       JB LOP4 ;小于90，则转LOP4
+       CMP AX,100 ;否则，继续与100进行比较
+       JB LOP5  ;小于100，则转LOP5
+       JZ LOP6  ;等于100，则转LOP6
+LOP1: MOV BX,[DI]
+      INC BX
+      MOV [DI],BX;对小与60的数据计数，并把其放在RES的第一个字节中
+      JMP;转到BEGIN
+LOP2: MOV BX,[DI+2]
+      INC BX
+      MOV [DI+2],BX;对60-69的数据计数，并把其放在RES的第二个字节中
+      JMP BEGIN;转到BEGIN
+LOP3: MOV BX,[DI+4]
+      INC BX MOV?[DI+4],BX;对70-79的数据计数，并把其放在RES的第三个字节?
+      JMP BEGIN ;转到BEGIN
+LOP4: MOV BX,[DI+6]
+       INC  BX
+        MOV [DI+6],BX         ;对80-89的数据计数，并把其放在RES的第四个字节中           JMP  BEGIN            ;转到BEGIN LOP5:   MOV BX,[DI+8]         INC  BX
+        MOV [DI+8],BX         ;对90-99的数据计数，并把其放在RES的第五个字节中           JMP  BEGIN            ;转到BEGIN LOP6:   MOV BX,[DI+10]         INC  BX
+        MOV [DI+10],BX      ;对等于100的数据计数，并把其放在RES的第六个字节中
+       JMP  BEGIN            ;转到BEGIN
+OUTPUT: LEA DX,STR1          ;取字符串STR1的首址
+        MOV AH,9
+        INT 21H              ;输出字符串STR1
+        CALL DATCH
+        LEA DX,STR2          ;取字符串STR2的首址
+        MOV AH,9
+        INT 21H              ;输出字符串STR2
+        ADD DI,2
+        CALL DATCH
+        LEA DX,STR3          ;取字符串STR3的首址
+        MOV AH,9
+        INT 21H              ;输出字符串STR3
+        ADD DI,2
+        CALL DATCH
+        LEA DX,STR4          ;取字符串STR4的首址
+        MOV AH,9
+        INT 21H              ;输出字符串STR4
+        ADD DI,2
+        CALL DATCH
+        LEA DX,STR5          ;取字符串STR5的首址
+        MOV AH,9
+        INT 21H              ;输出字符串STR5
+        ADD DI,2
+        CALL DATCH
+        LEA DX,STR6           ;取字符串STR6的首址
+        MOV AH,9
+        INT 21H               ;输出字符串STR6
+        ADD DI,2
+        CALL DATCH
+        MOV AH,1
+        INT 21H
+        MOV AH,4CH
+        INT 21H                    ;返回DOS
+DATCH PROC                          ;数值转换为ASCII码的子程序
+        PUSH DX
+        PUSH CX
+        PUSH BX
+        PUSH AX
+        XOR DX,DX
+        MOV AX,[DI]
+        MOV CX,10
+       DIV CX
+        MOV BX,DX
+        MOV DL,AL
+        ADD DL,30H
+        MOV AH,2
+        INT 21H
+        MOV DL,BL
+        ADD DL,30H
+        MOV AH,2
+        INT 21H
+        MOV DL,0AH               ;回车换行
+        MOV AH,2
+        INT 21H
+        MOV DL,0DH
+        MOV AH,2
+        INT 21H
+        POP AX
+        POP BX
+        POP CX
+        POP DX
+        DATCH ENDP
+        MAIN ENDP
+        CSEG ENDS
+        END MAINRET
+}
+
+match =windows =32bit, platform machine {
+
+size$un_initialized_memory = 64 * 1024 * 1024 ;; (byte)
+
+section '.data' data readable writeable
+address$un_initialized_memory:
+   rb size$un_initialized_memory
+
+}
+stack segment
+  db 10 dup(0)
+stack ends
